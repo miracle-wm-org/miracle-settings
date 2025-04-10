@@ -178,9 +178,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                                 color: Colors.red[400],
                                 onPressed: () {
                                   setState(() {
-                                    widget.config.removeCustomKeyCommand(
-                                      _keyCommands.indexOf(e.value),
-                                    );
+                                    widget.config.removeCustomKeyCommand(e.key);
                                     _keyCommands =
                                         widget.config.getCustomKeyCommands();
                                   });
