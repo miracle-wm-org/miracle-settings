@@ -179,76 +179,69 @@ class _StartupAppItemState extends State<_StartupAppItem> {
               ],
             ),
             const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
               children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 120,
-                      child: SwitchListTile(
-                        title: const Text('Restart', style: TextStyle(fontSize: 12)),
-                        value: _restartOnDeath,
-                        onChanged: (value) {
-                          setState(() {
-                            _restartOnDeath = value;
-                          });
-                          _updateApp();
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 120,
-                      child: SwitchListTile(
-                        title: const Text('No Startup ID', style: TextStyle(fontSize: 12)),
-                        value: _noStartupId,
-                        onChanged: (value) {
-                          setState(() {
-                            _noStartupId = value;
-                          });
-                          _updateApp();
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                  width: 140,
+                  child: SwitchListTile(
+                    title: const Text('Restart if dies', style: TextStyle(fontSize: 12)),
+                    value: _restartOnDeath,
+                    onChanged: (value) {
+                      setState(() {
+                        _restartOnDeath = value;
+                      });
+                      _updateApp();
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
                 ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 120,
-                      child: SwitchListTile(
-                        title: const Text('Halt Compositor', style: TextStyle(fontSize: 12)),
-                        value: _haltCompositor,
-                        onChanged: (value) {
-                          setState(() {
-                            _haltCompositor = value;
-                          });
-                          _updateApp();
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      child: SwitchListTile(
-                        title: const Text('Systemd', style: TextStyle(fontSize: 12)),
-                        value: _systemdScope,
-                        onChanged: (value) {
-                          setState(() {
-                            _systemdScope = value;
-                          });
-                          _updateApp();
-                        },
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                  width: 140,
+                  child: SwitchListTile(
+                    title: const Text('No Startup ID', style: TextStyle(fontSize: 12)),
+                    value: _noStartupId,
+                    onChanged: (value) {
+                      setState(() {
+                        _noStartupId = value;
+                      });
+                      _updateApp();
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
+                ),
+                SizedBox(
+                  width: 140,
+                  child: SwitchListTile(
+                    title: const Text('Halt Compositor', style: TextStyle(fontSize: 12)),
+                    value: _haltCompositor,
+                    onChanged: (value) {
+                      setState(() {
+                        _haltCompositor = value;
+                      });
+                      _updateApp();
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
+                ),
+                SizedBox(
+                  width: 140,
+                  child: SwitchListTile(
+                    title: const Text('Systemd Scope', style: TextStyle(fontSize: 12)),
+                    value: _systemdScope,
+                    onChanged: (value) {
+                      setState(() {
+                        _systemdScope = value;
+                      });
+                      _updateApp();
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
                 ),
               ],
             ),
