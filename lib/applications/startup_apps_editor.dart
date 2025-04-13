@@ -149,25 +149,14 @@ class _StartupAppItemState extends State<_StartupAppItem> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                    child: ShellCommandInput(
-                        labelText: 'Command',
-                        helperText: 'e.g. /usr/bin/gnome-terminal',
-                        current: _command,
-                        onChanged: (String? text) => setState(() {
-                              _command = text ?? '';
-                              _updateApp();
-                            }))),
-                IconButton(
-                  icon: const Icon(Icons.delete, size: 20),
-                  onPressed: widget.onRemove,
-                  tooltip: 'Remove App',
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(),
-                ),
-              ],
+            ShellCommandInput(
+              labelText: 'Command',
+              helperText: 'e.g. /usr/bin/gnome-terminal',
+              current: _command,
+              onChanged: (String? text) => setState(() {
+                _command = text ?? '';
+                _updateApp();
+              }),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -239,6 +228,17 @@ class _StartupAppItemState extends State<_StartupAppItem> {
                   ),
                 ),
               ],
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                icon: const Icon(Icons.delete, size: 20),
+                onPressed: widget.onRemove,
+                tooltip: 'Remove App',
+                color: Colors.red,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
             ),
           ],
         ),
