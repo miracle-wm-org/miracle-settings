@@ -41,11 +41,8 @@ class _StartupAppsEditorState extends State<StartupAppsEditor> {
   }
 
   void _updateApp(int index, MiracleStartupApp newApp) {
-    setState(() {
-      _apps[index] = newApp;
-    });
-    widget.config.removeStartupApp(index);
-    widget.config.addStartupApp(
+    widget.config.updateStartupApp(
+      index,
       newApp.command,
       restartOnDeath: newApp.restartOnDeath,
       noStartupId: newApp.noStartupId,
