@@ -768,9 +768,20 @@ class MiracleConfigData {
     return _miracleConfigRemoveBuiltInKeyCommandOverride(_ptr, index);
   }
 
+  int _doubleColorToInt(double color) {
+    return (color * 255.0).toInt();
+  }
+
+  double _intColorToDouble(int color) {
+    return color / 255.0;
+  }
+
   Color ffiColorArrayToColor(Array<Float> focusColor) {
-    return Color.fromARGB(focusColor[3].toInt(), focusColor[0].toInt(),
-        focusColor[1].toInt(), focusColor[2].toInt());
+    return Color.fromARGB(
+        _doubleColorToInt(focusColor[3]),
+        _doubleColorToInt(focusColor[0]),
+        _doubleColorToInt(focusColor[1]),
+        _doubleColorToInt(focusColor[2]));
   }
 
   // Border config

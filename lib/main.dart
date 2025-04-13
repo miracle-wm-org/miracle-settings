@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_wm_settings/applications/startup_apps_editor.dart';
+import 'package:miracle_wm_settings/border/border_editor.dart';
 import 'keybinds_editor/keybindings_editor.dart';
 import 'general/general_settings.dart';
 import 'ffi/miracle_config.dart';
