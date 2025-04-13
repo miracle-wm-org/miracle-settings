@@ -772,10 +772,6 @@ class MiracleConfigData {
     return (color * 255.0).toInt();
   }
 
-  double _intColorToDouble(int color) {
-    return color / 255.0;
-  }
-
   Color ffiColorArrayToColor(Array<Float> focusColor) {
     return Color.fromARGB(
         _doubleColorToInt(focusColor[3]),
