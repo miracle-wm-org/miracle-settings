@@ -53,6 +53,16 @@ final _miracleConfigGetKeyboardActionsOptionsCount =
   'miracle_config_get_keyboard_actions_options_count',
 );
 
+final _miracleConfigGetBuiltInKeyCommandsOption = _lib.lookupFunction<
+    _MiracleOption Function(Uint32),
+    _MiracleOption Function(
+        int)>("miracle_config_get_built_in_key_command_option");
+
+final _miracleConfigGetBuiltInKeyCommandsOptionsCount =
+    _lib.lookupFunction<Uint32 Function(), int Function()>(
+  'miracle_config_get_built_in_key_command_options_count',
+);
+
 final _miracleConfigGetKeyboardActionsOption = _lib.lookupFunction<
     _MiracleOption Function(Uint32),
     _MiracleOption Function(int)>("miracle_config_get_keyboard_actions_option");
@@ -260,36 +270,31 @@ final _miracleConfigRemoveEnvVar = _lib.lookupFunction<
     bool Function(Pointer<_MiracleConfigData>,
         int)>('miracle_config_remove_environment_variable');
 
-// Key commands
-final _miracleConfigGetKeyCommandCount =
-    _lib.lookupFunction<UintPtr Function(), int Function()>(
-  'miracle_config_get_key_command_count',
-);
+final _miracleConfigGetBuiltInKeyCommandOverrideCount = _lib.lookupFunction<
+        UintPtr Function(Pointer<_MiracleConfigData>),
+        int Function(Pointer<_MiracleConfigData>)>(
+    'miracle_config_get_built_in_key_command_override_count');
 
-final _miracleConfigGetKeyCommandListCount = _lib.lookupFunction<
-    UintPtr Function(Pointer<_MiracleConfigData>, Int32),
-    int Function(Pointer<_MiracleConfigData>,
-        int)>('miracle_config_get_key_command_list_count');
+final _miracleConfigGetBuiltInKeyCommandOverride = _lib.lookupFunction<
+    _MiracleBuiltInKeyCommand Function(Pointer<_MiracleConfigData>, UintPtr),
+    _MiracleBuiltInKeyCommand Function(Pointer<_MiracleConfigData>,
+        int)>('miracle_config_get_built_in_key_command_override');
 
-final _miracleConfigGetKeyCommand = _lib.lookupFunction<
-    _MiracleKeyCommand Function(Pointer<_MiracleConfigData>, Int32, UintPtr),
-    _MiracleKeyCommand Function(Pointer<_MiracleConfigData>, int,
-        int)>('miracle_config_get_key_command');
-
-final _miracleConfigAddKeyCommand = _lib.lookupFunction<
-    Void Function(Pointer<_MiracleConfigData>, Int32, Int32, Uint32, Int32),
+final _miracleConfigAddBuiltInKeyCommandOverride = _lib.lookupFunction<
+    Void Function(Pointer<_MiracleConfigData>, Uint32, Uint32, Int32, Uint32),
     void Function(Pointer<_MiracleConfigData>, int, int, int,
-        int)>('miracle_config_add_key_command');
+        int)>('miracle_config_add_built_in_key_command_override');
 
-final _miracleConfigRemoveKeyCommand = _lib.lookupFunction<
-    Bool Function(Pointer<_MiracleConfigData>, Int32, UintPtr),
-    bool Function(Pointer<_MiracleConfigData>, int,
-        int)>('miracle_config_remove_key_command');
+final _miracleConfigSetBuiltInKeyCommandOverride = _lib.lookupFunction<
+    Void Function(
+        Pointer<_MiracleConfigData>, Int32, Uint32, Uint32, Int32, Uint32),
+    void Function(Pointer<_MiracleConfigData>, int, int, int, int,
+        int)>('miracle_config_set_built_in_key_command_override');
 
-final _miracleConfigClearKeyCommands = _lib.lookupFunction<
-    Void Function(Pointer<_MiracleConfigData>, Int32),
-    void Function(
-        Pointer<_MiracleConfigData>, int)>('miracle_config_clear_key_commands');
+final _miracleConfigRemoveBuiltInKeyCommandOverride = _lib.lookupFunction<
+    Bool Function(Pointer<_MiracleConfigData>, UintPtr),
+    bool Function(Pointer<_MiracleConfigData>,
+        int)>('miracle_config_remove_built_in_key_command_override');
 
 // Border config
 final _miracleConfigGetBorderConfig = _lib.lookupFunction<
@@ -510,6 +515,20 @@ class MiracleConfig {
 
     return options;
   }
+
+  static List<MiracleOption> getBuiltInKeyCommandsOptions() {
+    final count = _miracleConfigGetBuiltInKeyCommandsOptionsCount();
+    final options = <MiracleOption>[];
+
+    for (var i = 0; i < count; i++) {
+      final option = _miracleConfigGetBuiltInKeyCommandsOption(i);
+      options.add(
+        MiracleOption(name: option.name.toDartString(), value: option.value),
+      );
+    }
+
+    return options;
+  }
 }
 
 // Extended ConfigData wrapper with all methods
@@ -678,18 +697,19 @@ class MiracleConfigData {
   bool removeEnvironmentVariable(int index) =>
       _miracleConfigRemoveEnvVar(_ptr, index);
 
-  // Key commands
-  List<MiracleKeyCommand> getKeyCommands(int commandType) {
-    final count = _miracleConfigGetKeyCommandListCount(_ptr, commandType);
-    final commands = <MiracleKeyCommand>[];
+  // Built-in key commands
+  List<MiracleBuiltInKeyCommand> getBuiltInKeyCommands() {
+    final count = _miracleConfigGetBuiltInKeyCommandOverrideCount(_ptr);
+    final commands = <MiracleBuiltInKeyCommand>[];
 
     for (var i = 0; i < count; i++) {
-      final cmd = _miracleConfigGetKeyCommand(_ptr, commandType, i);
+      final cmd = _miracleConfigGetBuiltInKeyCommandOverride(_ptr, i);
       commands.add(
-        MiracleKeyCommand(
+        MiracleBuiltInKeyCommand(
           action: cmd.action,
           modifiers: cmd.modifiers,
           key: cmd.key,
+          builtInAction: cmd.command,
         ),
       );
     }
@@ -697,16 +717,19 @@ class MiracleConfigData {
     return commands;
   }
 
-  void addKeyCommand(int commandType, int action, int modifiers, int key) {
-    _miracleConfigAddKeyCommand(_ptr, commandType, action, modifiers, key);
+  void addBuiltInKeyCommand(int action, int modifiers, int key, int command) {
+    _miracleConfigAddBuiltInKeyCommandOverride(
+        _ptr, action, modifiers, key, command);
   }
 
-  bool removeKeyCommand(int commandType, int index) {
-    return _miracleConfigRemoveKeyCommand(_ptr, commandType, index);
+  void updateBuiltInKeyCommand(
+      int index, int action, int modifiers, int key, int command) {
+    _miracleConfigSetBuiltInKeyCommandOverride(
+        _ptr, index, action, modifiers, key, command);
   }
 
-  void clearKeyCommands(int commandType) {
-    _miracleConfigClearKeyCommands(_ptr, commandType);
+  bool removeBuiltInKeyCommand(int index) {
+    return _miracleConfigRemoveBuiltInKeyCommandOverride(_ptr, index);
   }
 
   List<double> ffiColorArrayToList(Array<Float> focus_color) {
@@ -871,6 +894,21 @@ base class _MiracleCustomKeyCommand extends Struct {
   external Pointer<Utf8> command;
 }
 
+// Built in key commands
+base class _MiracleBuiltInKeyCommand extends Struct {
+  @Uint32()
+  external int action;
+
+  @Uint32()
+  external int modifiers;
+
+  @Int32()
+  external int key;
+
+  @Uint32()
+  external int command;
+}
+
 // Dart-friendly wrapper classes
 class MiracleOption {
   MiracleOption({required this.name, required this.value});
@@ -1009,16 +1047,17 @@ class MiracleEnvVar {
   MiracleEnvVar({required this.key, required this.value});
 }
 
-class MiracleKeyCommand {
+class MiracleBuiltInKeyCommand {
   final int action;
   final int modifiers;
   final int key;
+  final int builtInAction;
 
-  MiracleKeyCommand({
-    required this.action,
-    required this.modifiers,
-    required this.key,
-  });
+  MiracleBuiltInKeyCommand(
+      {required this.action,
+      required this.modifiers,
+      required this.key,
+      required this.builtInAction});
 }
 
 class MiracleAnimationDefinition {
