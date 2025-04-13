@@ -234,10 +234,25 @@ final _miracleConfigAddStartupApp = _lib.lookupFunction<
       bool,
     )>('miracle_config_add_startup_app');
 
-final _miracleConfigClearStartupApps = _lib.lookupFunction<
-    Void Function(Pointer<_MiracleConfigData>),
+final _miracleConfigSetStartupApp = _lib.lookupFunction<
+    Void Function(
+      Pointer<_MiracleConfigData>,
+      Int32,
+      Pointer<Utf8>,
+      Bool,
+      Bool,
+      Bool,
+      Bool,
+    ),
     void Function(
-        Pointer<_MiracleConfigData>)>('miracle_config_clear_startup_apps');
+      Pointer<_MiracleConfigData>,
+      int,
+      Pointer<Utf8>,
+      bool,
+      bool,
+      bool,
+      bool,
+    )>('miracle_config_set_startup_app');
 
 final _miracleConfigRemoveStartupApp = _lib.lookupFunction<
     Bool Function(Pointer<_MiracleConfigData>, UintPtr),
@@ -663,7 +678,27 @@ class MiracleConfigData {
     malloc.free(cmdPtr);
   }
 
-  void clearStartupApps() => _miracleConfigClearStartupApps(_ptr);
+  void updateStartupApp(
+    int index,
+    String command, {
+    bool restartOnDeath = false,
+    bool noStartupId = false,
+    bool shouldHaltCompositorOnDeath = false,
+    bool inSystemdScope = false,
+  }) {
+    final cmdPtr = command.toNativeUtf8();
+    _miracleConfigSetStartupApp(
+      _ptr,
+      index,
+      cmdPtr,
+      restartOnDeath,
+      noStartupId,
+      shouldHaltCompositorOnDeath,
+      inSystemdScope,
+    );
+    malloc.free(cmdPtr);
+  }
+
   bool removeStartupApp(int index) =>
       _miracleConfigRemoveStartupApp(_ptr, index);
 

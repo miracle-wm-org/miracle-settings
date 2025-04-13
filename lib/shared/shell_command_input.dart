@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:process_run/shell.dart';
 
-class TerminalCommandEditor extends StatefulWidget {
-  const TerminalCommandEditor({
-    required this.terminal,
-    required this.onTerminalChanged,
+class ShellCommandInput extends StatefulWidget {
+  const ShellCommandInput({
+    required this.current,
+    required this.onChanged,
+    required this.labelText,
+    required this.helperText,
     super.key,
   });
 
-  final String? terminal;
-  final ValueChanged<String?> onTerminalChanged;
+  final String? current;
+  final ValueChanged<String?> onChanged;
+  final String labelText;
+  final String helperText;
 
   @override
-  State<TerminalCommandEditor> createState() => _TerminalCommandEditorState();
+  State<ShellCommandInput> createState() => _ShellCommandInputState();
 }
 
-class _TerminalCommandEditorState extends State<TerminalCommandEditor> {
+class _ShellCommandInputState extends State<ShellCommandInput> {
   late final TextEditingController _controller;
   bool _isTesting = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.terminal);
+    _controller = TextEditingController(text: widget.current);
   }
 
   @override
@@ -31,7 +35,7 @@ class _TerminalCommandEditorState extends State<TerminalCommandEditor> {
     super.dispose();
   }
 
-  Future<void> _testTerminalCommand() async {
+  Future<void> _testCommand() async {
     if (_controller.text.isEmpty) return;
 
     setState(() {
@@ -42,13 +46,13 @@ class _TerminalCommandEditorState extends State<TerminalCommandEditor> {
       await run(_controller.text);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Terminal launched successfully')),
+          const SnackBar(content: Text('Launched successfully')),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to launch terminal: $e')),
+          SnackBar(content: Text('Failed to launch: $e')),
         );
       }
     } finally {
@@ -65,9 +69,9 @@ class _TerminalCommandEditorState extends State<TerminalCommandEditor> {
     return TextField(
       controller: _controller,
       decoration: InputDecoration(
-        labelText: 'Terminal Command',
+        labelText: widget.labelText,
         border: const OutlineInputBorder(),
-        helperText: 'Command to launch terminal emulator',
+        hintText: widget.helperText,
         suffixIcon: Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: _isTesting
@@ -78,14 +82,14 @@ class _TerminalCommandEditorState extends State<TerminalCommandEditor> {
                 )
               : IconButton(
                   icon: const Icon(Icons.play_arrow, size: 20),
-                  onPressed: _testTerminalCommand,
-                  tooltip: 'Test terminal command',
+                  onPressed: _testCommand,
+                  tooltip: 'Test command',
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
         ),
       ),
-      onChanged: (value) => widget.onTerminalChanged(value.isEmpty ? null : value),
+      onChanged: (value) => widget.onChanged(value.isEmpty ? null : value),
     );
   }
 }
