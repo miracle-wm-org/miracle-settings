@@ -38,7 +38,7 @@ class _KeybindingsEditorState extends State<KeybindingsEditor> {
             child: Column(
               children: [
                 CustomKeybindingsEditor(config: widget.config),
-                // We'll add more sections here later
+                BuiltInKeybindingsEditor(config: widget.config),
               ],
             ),
           ),
