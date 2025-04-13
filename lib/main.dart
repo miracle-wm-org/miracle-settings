@@ -64,7 +64,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   ];
 
   static List<Widget Function(SettingsHomePage home)> contentViews = [
-    (SettingsHomePage home) => GeneralSettings(config: home.config),
+    (SettingsHomePage home) => StartupAppsEditor(config: home.config),
     (SettingsHomePage home) => KeybindingsEditor(config: home.config),
     (SettingsHomePage home) => GeneralSettings(config: home.config),
     (SettingsHomePage home) => Center(child: Text('Workspace Configuration')),
