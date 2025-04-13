@@ -3,26 +3,26 @@ import 'package:miracle_wm_settings/ffi/linux_input_event_codes.dart';
 import 'package:miracle_wm_settings/ffi/miracle_config.dart';
 import 'keybind_editor_screen.dart';
 
-class CustomKeybindingsEditor extends StatefulWidget {
-  const CustomKeybindingsEditor({required this.config, super.key});
+class BuiltInKeybindingsEditor extends StatefulWidget {
+  const BuiltInKeybindingsEditor({required this.config, super.key});
 
   final MiracleConfigData config;
 
   @override
-  State<CustomKeybindingsEditor> createState() =>
-      _CustomKeybindingsEditorState();
+  State<BuiltInKeybindingsEditor> createState() =>
+      _BuiltInKeybindingsEditorState();
 }
 
-class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
-  late List<MiracleCustomKeyCommand> _keyCommands;
+class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
+  late List<MiracleBuiltInKeyCommand> _keyCommands;
 
   @override
   void initState() {
     super.initState();
-    _keyCommands = widget.config.getCustomKeyCommands();
+    _keyCommands = widget.config.getBuiltInKeyCommands();
   }
 
-  String _getKeyCombination(MiracleCustomKeyCommand cmd) {
+  String _getKeyCombination(MiracleBuiltInKeyCommand cmd) {
     final modNames = <String>[];
 
     for (final mod in MiracleConfig.getModifierOptions()) {
@@ -34,9 +34,9 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
     return '${modNames.join(' + ')}${modNames.isNotEmpty ? ' + ' : ''}${keyToString(cmd.key)}';
   }
 
-  String _getKeyState(MiracleCustomKeyCommand cmd) {
-    for (final opt in MiracleConfig.getKeyboardActionsOptions()) {
-      if (cmd.action == opt.value) {
+  String _getKeyAction(MiracleBuiltInKeyCommand cmd) {
+    for (final opt in MiracleConfig.getBuiltInKeyCommandsOptions()) {
+      if (cmd.builtInAction == opt.value) {
         return opt.name;
       }
     }
@@ -52,14 +52,14 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Custom Keybindings',
+            'Built-in Keybindings',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 16),
           if (_keyCommands.isEmpty)
-            const Text('No custom keybindings configured'),
+            const Text('No built-in keybindings configured'),
           if (_keyCommands.isNotEmpty)
             Table(
               columnWidths: const {
@@ -97,19 +97,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                         horizontal: 16,
                       ),
                       child: Text(
-                        'Key State',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
-                      child: Text(
-                        'Command',
+                        'Action',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -140,14 +128,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                               vertical: 12,
                               horizontal: 16,
                             ),
-                            child: Text(_getKeyState(e.value)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 16,
-                            ),
-                            child: Text(e.value.command),
+                            child: Text(_getKeyAction(e.value)),
                           ),
                           Row(
                             children: [
@@ -160,23 +141,23 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                                     MaterialPageRoute(
                                       builder: (context) => KeybindEditorScreen(
                                         label: "Edit Custom Keybinding",
-                                        isSelectingBuiltIn: false,
+                                        isSelectingBuiltIn: true,
                                         action: e.value.action,
                                         modifiers: e.value.modifiers,
                                         actionKey: e.value.key,
-                                        command: e.value.command,
+                                        builtInAction: e.value.action,
                                         onSave: (action, modifiers, actionKey,
-                                            command, _) {
-                                          widget.config.editCustomKeyCommand(
+                                            _, builtInAction) {
+                                          widget.config.updateBuiltInKeyCommand(
                                             e.key,
                                             action,
                                             modifiers,
                                             actionKey,
-                                            command!,
+                                            builtInAction!,
                                           );
                                           setState(() {
                                             _keyCommands = widget.config
-                                                .getCustomKeyCommands();
+                                                .getBuiltInKeyCommands();
                                           });
                                         },
                                       ),
@@ -185,7 +166,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                                       .then((_) {
                                     setState(() {
                                       _keyCommands =
-                                          widget.config.getCustomKeyCommands();
+                                          widget.config.getBuiltInKeyCommands();
                                     });
                                   });
                                 },
@@ -196,9 +177,10 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                                 color: Colors.red[400],
                                 onPressed: () {
                                   setState(() {
-                                    widget.config.removeCustomKeyCommand(e.key);
+                                    widget.config
+                                        .removeBuiltInKeyCommand(e.key);
                                     _keyCommands =
-                                        widget.config.getCustomKeyCommands();
+                                        widget.config.getBuiltInKeyCommands();
                                   });
                                 },
                               ),
@@ -213,32 +195,32 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context)
-                  .push(
-                MaterialPageRoute(
-                  builder: (context) => KeybindEditorScreen(
-                      label: "Add Custom Keybinding",
-                      isSelectingBuiltIn: false,
-                      action:
-                          MiracleConfig.getKeyboardActionsOptions().first.value,
-                      modifiers: 0,
-                      actionKey: 0,
-                      command: '',
-                      onSave: (action, modifiers, actionKey, command, _) {
-                        widget.config.addCustomKeyCommand(
-                          action,
-                          modifiers,
-                          actionKey,
-                          command!,
-                        );
-                        setState(() {
-                          _keyCommands = widget.config.getCustomKeyCommands();
-                        });
-                      }),
-                ),
-              )
+                  .push(MaterialPageRoute(
+                      builder: (context) => KeybindEditorScreen(
+                          label: "Add Custom Keybinding",
+                          isSelectingBuiltIn: true,
+                          action: MiracleConfig.getKeyboardActionsOptions()
+                              .first
+                              .value,
+                          modifiers: 0,
+                          actionKey: 0,
+                          builtInAction: 0,
+                          onSave:
+                              (action, modifiers, actionKey, _, builtInAction) {
+                            widget.config.addBuiltInKeyCommand(
+                              action,
+                              modifiers,
+                              actionKey,
+                              builtInAction!,
+                            );
+                            setState(() {
+                              _keyCommands =
+                                  widget.config.getBuiltInKeyCommands();
+                            });
+                          })))
                   .then((_) {
                 setState(() {
-                  _keyCommands = widget.config.getCustomKeyCommands();
+                  _keyCommands = widget.config.getBuiltInKeyCommands();
                 });
               });
             },
