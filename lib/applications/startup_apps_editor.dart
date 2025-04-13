@@ -148,9 +148,9 @@ class _StartupAppItemState extends State<_StartupAppItem> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -163,68 +163,92 @@ class _StartupAppItemState extends State<_StartupAppItem> {
                       labelText: 'Command',
                       hintText: 'e.g. /usr/bin/gnome-terminal',
                       border: OutlineInputBorder(),
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     ),
                     onChanged: (_) => _updateApp(),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete),
+                  icon: const Icon(Icons.delete, size: 20),
                   onPressed: widget.onRemove,
                   tooltip: 'Remove App',
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 16,
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SwitchListTile(
-                  title: const Text('Restart if dies'),
-                  value: _restartOnDeath,
-                  onChanged: (value) {
-                    setState(() {
-                      _restartOnDeath = value;
-                    });
-                    _updateApp();
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 120,
+                      child: SwitchListTile(
+                        title: const Text('Restart', style: TextStyle(fontSize: 12)),
+                        value: _restartOnDeath,
+                        onChanged: (value) {
+                          setState(() {
+                            _restartOnDeath = value;
+                          });
+                          _updateApp();
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 120,
+                      child: SwitchListTile(
+                        title: const Text('No Startup ID', style: TextStyle(fontSize: 12)),
+                        value: _noStartupId,
+                        onChanged: (value) {
+                          setState(() {
+                            _noStartupId = value;
+                          });
+                          _updateApp();
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      ),
+                    ),
+                  ],
                 ),
-                SwitchListTile(
-                  title: const Text('No Startup ID'),
-                  value: _noStartupId,
-                  onChanged: (value) {
-                    setState(() {
-                      _noStartupId = value;
-                    });
-                    _updateApp();
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                ),
-                SwitchListTile(
-                  title: const Text('Halt Compositor'),
-                  value: _haltCompositor,
-                  onChanged: (value) {
-                    setState(() {
-                      _haltCompositor = value;
-                    });
-                    _updateApp();
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                ),
-                SwitchListTile(
-                  title: const Text('Systemd Scope'),
-                  value: _systemdScope,
-                  onChanged: (value) {
-                    setState(() {
-                      _systemdScope = value;
-                    });
-                    _updateApp();
-                  },
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 120,
+                      child: SwitchListTile(
+                        title: const Text('Halt Compositor', style: TextStyle(fontSize: 12)),
+                        value: _haltCompositor,
+                        onChanged: (value) {
+                          setState(() {
+                            _haltCompositor = value;
+                          });
+                          _updateApp();
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 100,
+                      child: SwitchListTile(
+                        title: const Text('Systemd', style: TextStyle(fontSize: 12)),
+                        value: _systemdScope,
+                        onChanged: (value) {
+                          setState(() {
+                            _systemdScope = value;
+                          });
+                          _updateApp();
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
