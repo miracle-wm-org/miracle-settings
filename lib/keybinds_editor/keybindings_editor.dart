@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_wm_settings/ffi/miracle_config.dart';
+import 'package:miracle_wm_settings/keybinds_editor/built_in_keybindings_editor.dart';
 import 'custom_keybindings_editor.dart';
 
 class KeybindingsEditor extends StatefulWidget {
@@ -37,6 +38,7 @@ class _KeybindingsEditorState extends State<KeybindingsEditor> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                BuiltInKeybindingsEditor(config: widget.config),
                 CustomKeybindingsEditor(config: widget.config),
                 // We'll add more sections here later
               ],

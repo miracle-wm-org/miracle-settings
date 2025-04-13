@@ -4,13 +4,26 @@ import 'key_combination_selector.dart';
 
 class KeybindEditorScreen extends StatefulWidget {
   const KeybindEditorScreen({
-    required this.config,
-    this.index,
+    required this.label,
+    required this.isSelectingBuiltIn,
+    required this.action,
+    required this.modifiers,
+    required this.actionKey,
+    this.command,
+    this.builtInAction,
+    required this.onSave,
     super.key,
   });
 
-  final MiracleConfigData config;
-  final int? index;
+  final String label;
+  final bool isSelectingBuiltIn;
+  final int action;
+  final int modifiers;
+  final int actionKey;
+  final String? command;
+  final int? builtInAction;
+  final void Function(int action, int modifiers, int actionKey, String? command,
+      int? builtInAction) onSave;
 
   @override
   State<KeybindEditorScreen> createState() => _KeybindEditorScreenState();
@@ -21,20 +34,18 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
   late int _selectedModifiers;
   late int _selectedKey;
   late final TextEditingController _commandController;
+  late int _selectedBuiltInAction;
 
   @override
   void initState() {
     super.initState();
-    final existingCommand = widget.index != null
-        ? widget.config.getCustomKeyCommands()[widget.index!]
-        : null;
-    _selectedAction = existingCommand?.action ??
-        MiracleConfig.getKeyboardActionsOptions().first.value;
-    _selectedModifiers = existingCommand?.modifiers ?? 0;
-    _selectedKey = existingCommand?.key ?? 0;
+    _selectedAction = widget.action;
+    _selectedModifiers = widget.modifiers;
+    _selectedKey = widget.actionKey;
     _commandController = TextEditingController(
-      text: existingCommand?.command ?? '',
+      text: widget.command,
     );
+    _selectedBuiltInAction = widget.builtInAction ?? 0;
   }
 
   @override
@@ -44,30 +55,15 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
   }
 
   void _saveKeybind() {
-    if (_commandController.text.isEmpty) {
+    if (!widget.isSelectingBuiltIn && _commandController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a command')),
       );
       return;
     }
 
-    if (widget.index != null) {
-      // Edit existing command
-      widget.config.editCustomKeyCommand(
-        widget.index!,
-        _selectedAction,
-        _selectedModifiers,
-        _selectedKey,
-        _commandController.text,
-      );
-    } else {
-      widget.config.addCustomKeyCommand(
-        _selectedAction,
-        _selectedModifiers,
-        _selectedKey,
-        _commandController.text,
-      );
-    }
+    widget.onSave(_selectedAction, _selectedModifiers, _selectedKey,
+        _commandController.text, _selectedBuiltInAction);
 
     Navigator.of(context).pop();
   }
@@ -76,7 +72,7 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.index != null ? 'Edit Keybind' : 'Add Keybind'),
+        title: Text(widget.label),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -104,14 +100,37 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
               },
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: _commandController,
-              decoration: const InputDecoration(
-                labelText: 'Command',
-                hintText: 'Enter the command to execute',
-                border: OutlineInputBorder(),
+            if (widget.isSelectingBuiltIn)
+              DropdownButtonFormField<int>(
+                value: _selectedBuiltInAction,
+                items:
+                    MiracleConfig.getBuiltInKeyCommandsOptions().map((option) {
+                  return DropdownMenuItem<int>(
+                    value: option.value,
+                    child: Text(option.name),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _selectedBuiltInAction = value;
+                    });
+                  }
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Action',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
+            if (!widget.isSelectingBuiltIn)
+              TextField(
+                controller: _commandController,
+                decoration: const InputDecoration(
+                  labelText: 'Command',
+                  hintText: 'Enter the command to execute',
+                  border: OutlineInputBorder(),
+                ),
+              ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveKeybind,
