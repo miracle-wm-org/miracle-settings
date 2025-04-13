@@ -95,7 +95,10 @@ class _BorderEditorState extends State<BorderEditor> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                const Text('Border Size', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Border Size'),
+                ),
                 const SizedBox(height: 8),
                 Slider(
                   value: _borderSize.toDouble(),
