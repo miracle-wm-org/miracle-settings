@@ -50,6 +50,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
       label: Text('Keybindings'),
     ),
     NavigationRailDestination(
+      icon: Icon(Icons.apps),
+      label: Text('Applications'),
+    ),
+    NavigationRailDestination(
       icon: Icon(Icons.space_dashboard),
       label: Text('Workspaces'),
     ),
@@ -62,6 +66,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   static List<Widget Function(SettingsHomePage home)> contentViews = [
     (SettingsHomePage home) => GeneralSettings(config: home.config),
     (SettingsHomePage home) => KeybindingsEditor(config: home.config),
+    (SettingsHomePage home) => GeneralSettings(config: home.config),
     (SettingsHomePage home) => Center(child: Text('Workspace Configuration')),
     (SettingsHomePage home) => Center(child: Text('Layout Preferences')),
   ];
