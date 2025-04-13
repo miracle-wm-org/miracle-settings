@@ -95,12 +95,14 @@ class _BorderEditorState extends State<BorderEditor> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
+                const Text('Border Size', style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
                 Slider(
                   value: _borderSize.toDouble(),
                   min: 0,
                   max: 20,
                   divisions: 20,
-                  label: 'Border Size: $_borderSize',
+                  label: '$_borderSize px',
                   onChanged: (value) {
                     setState(() {
                       _borderSize = value.toInt();
