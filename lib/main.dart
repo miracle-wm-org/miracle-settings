@@ -60,6 +60,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
     ),
     NavigationRailDestination(
       icon: Icon(Icons.border_all),
+      label: Text('Borders'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.space_dashboard),
       label: Text('Layouts'),
     ),
   ];
@@ -69,6 +73,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
     (SettingsHomePage home) => KeybindingsEditor(config: home.config),
     (SettingsHomePage home) => StartupAppsEditor(config: home.config),
     (SettingsHomePage home) => Center(child: Text('Workspace Configuration')),
+    (SettingsHomePage home) => BorderEditor(config: home.config),
     (SettingsHomePage home) => Center(child: Text('Layout Preferences')),
   ];
 
