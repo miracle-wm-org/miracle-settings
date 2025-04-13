@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:miracle_wm_settings/ffi/miracle_config.dart';
 import 'package:miracle_wm_settings/general/primary_modifier_editor.dart';
 import 'package:miracle_wm_settings/general/primary_button_editor.dart';
-import 'package:miracle_wm_settings/general/terminal_command_editor.dart';
+import 'package:miracle_wm_settings/shared/shell_command_input.dart';
 
 class GeneralSettings extends StatefulWidget {
   const GeneralSettings({required this.config, super.key});
@@ -196,9 +196,11 @@ class _GeneralSettingsState extends State<GeneralSettings> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: TerminalCommandEditor(
-            terminal: config.terminal,
-            onTerminalChanged: (value) {
+          child: ShellCommandInput(
+            labelText: 'Terminal Command',
+            helperText: 'Command to launch terminal emulator',
+            current: config.terminal,
+            onChanged: (value) {
               setState(() {
                 config.terminal = value;
               });

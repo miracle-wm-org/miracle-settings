@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../ffi/miracle_config.dart';
+import '../shared/shell_command_input.dart';
 
 class StartupAppsEditor extends StatefulWidget {
   const StartupAppsEditor({required this.config, super.key});
@@ -113,7 +114,7 @@ class _StartupAppItem extends StatefulWidget {
 }
 
 class _StartupAppItemState extends State<_StartupAppItem> {
-  late TextEditingController _commandController;
+  late String _command;
   late bool _restartOnDeath;
   late bool _noStartupId;
   late bool _haltCompositor;
@@ -122,22 +123,16 @@ class _StartupAppItemState extends State<_StartupAppItem> {
   @override
   void initState() {
     super.initState();
-    _commandController = TextEditingController(text: widget.app.command);
+    _command = widget.app.command;
     _restartOnDeath = widget.app.restartOnDeath;
     _noStartupId = widget.app.noStartupId;
     _haltCompositor = widget.app.shouldHaltCompositorOnDeath;
     _systemdScope = widget.app.inSystemdScope;
   }
 
-  @override
-  void dispose() {
-    _commandController.dispose();
-    super.dispose();
-  }
-
   void _updateApp() {
     widget.onChanged(MiracleStartupApp(
-      command: _commandController.text,
+      command: _command,
       restartOnDeath: _restartOnDeath,
       noStartupId: _noStartupId,
       shouldHaltCompositorOnDeath: _haltCompositor,
@@ -157,18 +152,14 @@ class _StartupAppItemState extends State<_StartupAppItem> {
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _commandController,
-                    decoration: const InputDecoration(
-                      labelText: 'Command',
-                      hintText: 'e.g. /usr/bin/gnome-terminal',
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                    ),
-                    onChanged: (_) => _updateApp(),
-                  ),
-                ),
+                    child: ShellCommandInput(
+                        labelText: 'Command',
+                        helperText: 'e.g. /usr/bin/gnome-terminal',
+                        current: _command,
+                        onChanged: (String? text) => setState(() {
+                              _command = text ?? '';
+                              _updateApp();
+                            }))),
                 IconButton(
                   icon: const Icon(Icons.delete, size: 20),
                   onPressed: widget.onRemove,
@@ -184,9 +175,10 @@ class _StartupAppItemState extends State<_StartupAppItem> {
               runSpacing: 4,
               children: [
                 SizedBox(
-                  width: 140,
+                  width: 200,
                   child: SwitchListTile(
-                    title: const Text('Restart if dies', style: TextStyle(fontSize: 12)),
+                    title: const Text('Restart if dies',
+                        style: TextStyle(fontSize: 12)),
                     value: _restartOnDeath,
                     onChanged: (value) {
                       setState(() {
@@ -199,9 +191,10 @@ class _StartupAppItemState extends State<_StartupAppItem> {
                   ),
                 ),
                 SizedBox(
-                  width: 140,
+                  width: 200,
                   child: SwitchListTile(
-                    title: const Text('No Startup ID', style: TextStyle(fontSize: 12)),
+                    title: const Text('No Startup ID',
+                        style: TextStyle(fontSize: 12)),
                     value: _noStartupId,
                     onChanged: (value) {
                       setState(() {
@@ -214,9 +207,10 @@ class _StartupAppItemState extends State<_StartupAppItem> {
                   ),
                 ),
                 SizedBox(
-                  width: 140,
+                  width: 200,
                   child: SwitchListTile(
-                    title: const Text('Halt Compositor', style: TextStyle(fontSize: 12)),
+                    title: const Text('Halt Compositor',
+                        style: TextStyle(fontSize: 12)),
                     value: _haltCompositor,
                     onChanged: (value) {
                       setState(() {
@@ -229,9 +223,10 @@ class _StartupAppItemState extends State<_StartupAppItem> {
                   ),
                 ),
                 SizedBox(
-                  width: 140,
+                  width: 200,
                   child: SwitchListTile(
-                    title: const Text('Systemd Scope', style: TextStyle(fontSize: 12)),
+                    title: const Text('Systemd Scope',
+                        style: TextStyle(fontSize: 12)),
                     value: _systemdScope,
                     onChanged: (value) {
                       setState(() {
