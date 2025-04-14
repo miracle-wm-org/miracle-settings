@@ -276,10 +276,11 @@ final _miracleConfigAddEnvVar = _lib.lookupFunction<
     void Function(Pointer<_MiracleConfigData>, Pointer<Utf8>,
         Pointer<Utf8>)>('miracle_config_add_environment_variable');
 
-final _miracleConfigClearEnvVars = _lib.lookupFunction<
-        Void Function(Pointer<_MiracleConfigData>),
-        void Function(Pointer<_MiracleConfigData>)>(
-    'miracle_config_clear_environment_variables');
+final _miracleConfigSetEnvVar = _lib.lookupFunction<
+    Void Function(
+        Pointer<_MiracleConfigData>, Int32, Pointer<Utf8>, Pointer<Utf8>),
+    void Function(Pointer<_MiracleConfigData>, int, Pointer<Utf8>,
+        Pointer<Utf8>)>('miracle_config_set_environment_variable');
 
 final _miracleConfigRemoveEnvVar = _lib.lookupFunction<
     Bool Function(Pointer<_MiracleConfigData>, UintPtr),
@@ -729,7 +730,14 @@ class MiracleConfigData {
     malloc.free(valuePtr);
   }
 
-  void clearEnvironmentVariables() => _miracleConfigClearEnvVars(_ptr);
+  void setEnvironmentVariable(int index, String key, String value) {
+    final keyPtr = key.toNativeUtf8();
+    final valuePtr = value.toNativeUtf8();
+    _miracleConfigSetEnvVar(_ptr, index, keyPtr, valuePtr);
+    malloc.free(keyPtr);
+    malloc.free(valuePtr);
+  }
+
   bool removeEnvironmentVariable(int index) =>
       _miracleConfigRemoveEnvVar(_ptr, index);
 
