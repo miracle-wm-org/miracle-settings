@@ -18,24 +18,22 @@ class _GeneralSettingsState extends State<GeneralSettings> {
   Widget build(BuildContext context) {
     final config = widget.config;
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Row(
-              children: [
-                const Icon(Icons.settings, size: 28),
-                const SizedBox(width: 12),
-                Text(
-                  'General',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            children: [
+              const Icon(Icons.settings, size: 28),
+              const SizedBox(width: 12),
+              Text(
+                'General',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ],
           ),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: PrimaryModifierEditor(
@@ -226,7 +224,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
         ),
         _EnvironmentVariablesEditor(config: config),
         const Divider(height: 1),
-      ),
+      ]),
     );
   }
 }
