@@ -212,7 +212,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Row(
             children: [
-              const Icon(Icons.environment, size: 28),
+              const Icon(Icons.forest, size: 28),
               const SizedBox(width: 12),
               Text(
                 'Environment Variables',
@@ -235,10 +235,12 @@ class _EnvironmentVariablesEditor extends StatefulWidget {
   final MiracleConfigData config;
 
   @override
-  State<_EnvironmentVariablesEditor> createState() => _EnvironmentVariablesEditorState();
+  State<_EnvironmentVariablesEditor> createState() =>
+      _EnvironmentVariablesEditorState();
 }
 
-class _EnvironmentVariablesEditorState extends State<_EnvironmentVariablesEditor> {
+class _EnvironmentVariablesEditorState
+    extends State<_EnvironmentVariablesEditor> {
   late List<MiracleEnvVar> _envVars;
 
   @override
@@ -389,7 +391,8 @@ class _EnvVarDialogState extends State<_EnvVarDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            if (_keyController.text.isNotEmpty && _valueController.text.isNotEmpty) {
+            if (_keyController.text.isNotEmpty &&
+                _valueController.text.isNotEmpty) {
               Navigator.pop(
                 context,
                 MapEntry(_keyController.text, _valueController.text),
