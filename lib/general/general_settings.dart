@@ -225,6 +225,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
           ),
         ),
         _EnvironmentVariablesEditor(config: config),
+        const Divider(height: 1),
       ],
     );
   }
