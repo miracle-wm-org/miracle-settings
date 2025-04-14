@@ -22,20 +22,20 @@ class _GeneralSettingsState extends State<GeneralSettings> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            children: [
-              const Icon(Icons.settings, size: 28),
-              const SizedBox(width: 12),
-              Text(
-                'General',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ],
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                const Icon(Icons.settings, size: 28),
+                const SizedBox(width: 12),
+                Text(
+                  'General',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
           ),
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: PrimaryModifierEditor(
