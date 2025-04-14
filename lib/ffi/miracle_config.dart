@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/material.dart';
 
 // FFI bindings
 final _lib = DynamicLibrary.open(
@@ -767,13 +768,16 @@ class MiracleConfigData {
     return _miracleConfigRemoveBuiltInKeyCommandOverride(_ptr, index);
   }
 
-  List<double> ffiColorArrayToList(Array<Float> focus_color) {
-    List<double> result = [];
-    for (var i = 0; i < 4; i++) {
-      result.add(focus_color[i]);
-    }
+  int _doubleColorToInt(double color) {
+    return (color * 255.0).toInt();
+  }
 
-    return result;
+  Color ffiColorArrayToColor(Array<Float> focusColor) {
+    return Color.fromARGB(
+        _doubleColorToInt(focusColor[3]),
+        _doubleColorToInt(focusColor[0]),
+        _doubleColorToInt(focusColor[1]),
+        _doubleColorToInt(focusColor[2]));
   }
 
   // Border config
@@ -781,19 +785,23 @@ class MiracleConfigData {
     final config = _miracleConfigGetBorderConfig(_ptr);
     return MiracleBorderConfig(
       size: config.size,
-      focusColor: ffiColorArrayToList(config.focus_color),
-      color: ffiColorArrayToList(config.color),
+      focusColor: ffiColorArrayToColor(config.focus_color),
+      color: ffiColorArrayToColor(config.color),
     );
   }
 
   void setBorderConfig(MiracleBorderConfig config) {
     final focusColor = calloc<Float>(4);
-    final color = calloc<Float>(4);
+    focusColor[0] = config.focusColor.a.toDouble();
+    focusColor[1] = config.focusColor.b.toDouble();
+    focusColor[2] = config.focusColor.g.toDouble();
+    focusColor[3] = config.focusColor.r.toDouble();
 
-    for (var i = 0; i < 4; i++) {
-      focusColor[i] = config.focusColor[i];
-      color[i] = config.color[i];
-    }
+    final color = calloc<Float>(4);
+    color[0] = config.color.a.toDouble();
+    color[1] = config.color.b.toDouble();
+    color[2] = config.color.g.toDouble();
+    color[3] = config.color.r.toDouble();
 
     _miracleConfigSetBorderConfig(_ptr, config.size, focusColor, color);
     calloc.free(focusColor);
@@ -968,8 +976,8 @@ class MiracleCustomKeyCommand {
 
 class MiracleBorderConfig {
   final int size;
-  final List<double> focusColor; // RGBA
-  final List<double> color; // RGBA
+  final Color focusColor; // RGBA
+  final Color color; // RGBA
 
   MiracleBorderConfig({
     required this.size,
