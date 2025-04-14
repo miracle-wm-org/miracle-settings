@@ -21,7 +21,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        Padding(
+          Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Row(
             children: [
