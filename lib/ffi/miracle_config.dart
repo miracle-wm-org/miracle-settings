@@ -334,10 +334,10 @@ final _miracleConfigSetBorderConfig = _lib.lookupFunction<
     )>('miracle_config_set_border_config');
 
 // Animation definitions
-final _miracleConfigGetAnimationDefCount =
-    _lib.lookupFunction<UintPtr Function(), int Function()>(
-  'miracle_config_get_animation_definition_count',
-);
+final _miracleConfigGetAnimationDefCount = _lib.lookupFunction<
+        UintPtr Function(Pointer<_MiracleConfigData>),
+        int Function(Pointer<_MiracleConfigData>)>(
+    'miracle_config_get_animation_definition_count');
 
 final _miracleConfigGetAnimationDef = _lib.lookupFunction<
     _MiracleAnimationDef Function(Pointer<_MiracleConfigData>, Int32),
@@ -353,6 +353,11 @@ final _miracleConfigSetAnimationDef = _lib.lookupFunction<
         void Function(
             Pointer<_MiracleConfigData>, int, Pointer<_MiracleAnimationDef>)>(
     'miracle_config_set_animation_definition');
+
+final _miracleConfigResetAnimationDef = _lib.lookupFunction<
+    Void Function(Pointer<_MiracleConfigData>, Int32),
+    void Function(Pointer<_MiracleConfigData>,
+        int)>('miracle_config_reset_animation_definition');
 
 // Workspace config
 final _miracleConfigGetWorkspaceConfigCount = _lib.lookupFunction<
@@ -816,7 +821,9 @@ class MiracleConfigData {
     calloc.free(color);
   }
 
-  // Animation definitions
+  // Animation
+  int get animationDefinitionCount => _miracleConfigGetAnimationDefCount(_ptr);
+
   MiracleAnimationDefinition getAnimationDefinition(
     MiracleAnimatableEvent event,
   ) {
@@ -854,6 +861,10 @@ class MiracleConfigData {
 
     _miracleConfigSetAnimationDef(_ptr, event.index, defPtr);
     calloc.free(defPtr);
+  }
+
+  void resetAnimationDefinition(MiracleAnimatableEvent event) {
+    _miracleConfigResetAnimationDef(_ptr, event.index);
   }
 
   // Workspace config
