@@ -156,128 +156,123 @@ class _AnimationEditorState extends State<AnimationEditor> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    Text('Easing Parameters', style: Theme.of(context).textTheme.titleSmall),
+                    TextFormField(
+                      initialValue: editedDefinition.c1.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'c1 (Bezier control point)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(c1: val);
+                          });
+                        }
+                      },
+                    ),
                     const SizedBox(height: 8),
-                    GridView.count(
-                      shrinkWrap: true,
-                      crossAxisCount: 2,
-                      childAspectRatio: 3,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                      children: [
-                        TextFormField(
-                          initialValue: editedDefinition.c1.toString(),
-                          decoration: const InputDecoration(
-                            labelText: 'c1 (Bezier)',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            final val = double.tryParse(value);
-                            if (val != null) {
-                              setState(() {
-                                editedDefinition = editedDefinition.copyWith(c1: val);
-                              });
-                            }
-                          },
-                        ),
-                        TextFormField(
-                          initialValue: editedDefinition.c2.toString(),
-                          decoration: const InputDecoration(
-                            labelText: 'c2 (Bezier)',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            final val = double.tryParse(value);
-                            if (val != null) {
-                              setState(() {
-                                editedDefinition = editedDefinition.copyWith(c2: val);
-                              });
-                            }
-                          },
-                        ),
-                        TextFormField(
-                          initialValue: editedDefinition.c3.toString(),
-                          decoration: const InputDecoration(
-                            labelText: 'c3 (Bezier)',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            final val = double.tryParse(value);
-                            if (val != null) {
-                              setState(() {
-                                editedDefinition = editedDefinition.copyWith(c3: val);
-                              });
-                            }
-                          },
-                        ),
-                        TextFormField(
-                          initialValue: editedDefinition.c4.toString(),
-                          decoration: const InputDecoration(
-                            labelText: 'c4 (Bezier)',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            final val = double.tryParse(value);
-                            if (val != null) {
-                              setState(() {
-                                editedDefinition = editedDefinition.copyWith(c4: val);
-                              });
-                            }
-                          },
-                        ),
-                        TextFormField(
-                          initialValue: editedDefinition.c5.toString(),
-                          decoration: const InputDecoration(
-                            labelText: 'c5 (Bezier)',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            final val = double.tryParse(value);
-                            if (val != null) {
-                              setState(() {
-                                editedDefinition = editedDefinition.copyWith(c5: val);
-                              });
-                            }
-                          },
-                        ),
-                        TextFormField(
-                          initialValue: editedDefinition.n1.toString(),
-                          decoration: const InputDecoration(
-                            labelText: 'n1 (Elastic)',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            final val = double.tryParse(value);
-                            if (val != null) {
-                              setState(() {
-                                editedDefinition = editedDefinition.copyWith(n1: val);
-                              });
-                            }
-                          },
-                        ),
-                        TextFormField(
-                          initialValue: editedDefinition.d1.toString(),
-                          decoration: const InputDecoration(
-                            labelText: 'd1 (Elastic)',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            final val = double.tryParse(value);
-                            if (val != null) {
-                              setState(() {
-                                editedDefinition = editedDefinition.copyWith(d1: val);
-                              });
-                            }
-                          },
-                        ),
-                      ],
+                    TextFormField(
+                      initialValue: editedDefinition.c2.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'c2 (Bezier control point)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(c2: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.c3.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'c3 (Bezier control point)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(c3: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.c4.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'c4 (Bezier control point)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(c4: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.c5.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'c5 (Bezier control point)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(c5: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.n1.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'n1 (Elastic oscillations)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(n1: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.d1.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'd1 (Elastic period)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(d1: val);
+                          });
+                        }
+                      },
                     ),
                   ],
                 ),
