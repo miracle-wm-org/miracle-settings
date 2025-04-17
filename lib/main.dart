@@ -67,6 +67,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
       icon: Icon(Icons.space_dashboard),
       label: Text('Layouts'),
     ),
+    NavigationRailDestination(
+      icon: Icon(Icons.animation),
+      label: Text('Animations'),
+    ),
   ];
 
   static List<Widget Function(SettingsHomePage home)> contentViews = [
@@ -76,6 +80,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
     (SettingsHomePage home) => Center(child: Text('Workspace Configuration')),
     (SettingsHomePage home) => BorderEditor(config: home.config),
     (SettingsHomePage home) => Center(child: Text('Layout Preferences')),
+    (SettingsHomePage home) => AnimationEditor(config: home.config),
   ];
 
   @override
