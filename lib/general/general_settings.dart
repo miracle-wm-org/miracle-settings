@@ -17,215 +17,227 @@ class _GeneralSettingsState extends State<GeneralSettings> {
   @override
   Widget build(BuildContext context) {
     final config = widget.config;
-    return SingleChildScrollView(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            children: [
-              const Icon(Icons.settings, size: 28),
-              const SizedBox(width: 12),
-              Text(
-                'General',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: PrimaryModifierEditor(
-            modifier: config.primaryModifier,
-            onModifierChanged: (newModifier) {
-              setState(() {
-                config.primaryModifier = newModifier;
-              });
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: PrimaryButtonEditor(
-            button: config.primaryButton,
-            onButtonChanged: (newButton) {
-              setState(() {
-                config.primaryButton = newButton;
-              });
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Inner Gaps X',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final numValue = int.tryParse(value);
-                    if (numValue != null) {
-                      setState(() {
-                        config.innerGapsX = numValue;
-                      });
-                    }
-                  },
-                  controller: TextEditingController(
-                    text: config.innerGapsX.toString(),
-                  ),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Expanded(
+          child: SingleChildScrollView(
+        child: Column(children: [
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                const Icon(Icons.settings, size: 28),
+                const SizedBox(width: 12),
+                Text(
+                  'General',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Inner Gaps Y',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final numValue = int.tryParse(value);
-                    if (numValue != null) {
-                      setState(() {
-                        config.innerGapsY = numValue;
-                      });
-                    }
-                  },
-                  controller: TextEditingController(
-                    text: config.innerGapsY.toString(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Outer Gaps X',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final numValue = int.tryParse(value);
-                    if (numValue != null) {
-                      setState(() {
-                        config.outerGapsX = numValue;
-                      });
-                    }
-                  },
-                  controller: TextEditingController(
-                    text: config.outerGapsX.toString(),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Outer Gaps Y',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final numValue = int.tryParse(value);
-                    if (numValue != null) {
-                      setState(() {
-                        config.outerGapsY = numValue;
-                      });
-                    }
-                  },
-                  controller: TextEditingController(
-                    text: config.outerGapsY.toString(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: TextField(
-            decoration: const InputDecoration(
-              labelText: 'Resize Jump (px)',
-              border: OutlineInputBorder(),
-              helperText: 'Pixels to jump when resizing windows',
+              ],
             ),
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              final numValue = int.tryParse(value);
-              if (numValue != null) {
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: PrimaryModifierEditor(
+              modifier: config.primaryModifier,
+              onModifierChanged: (newModifier) {
                 setState(() {
-                  config.resizeJump = numValue;
+                  config.primaryModifier = newModifier;
                 });
-              }
-            },
-            controller: TextEditingController(
-              text: config.resizeJump.toString(),
+              },
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            children: [
-              Checkbox(
-                value: config.animationsEnabled,
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      config.animationsEnabled = value;
-                    });
-                  }
-                },
-              ),
-              const SizedBox(width: 8),
-              const Text('Enable Animations'),
-            ],
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: PrimaryButtonEditor(
+              button: config.primaryButton,
+              onButtonChanged: (newButton) {
+                setState(() {
+                  config.primaryButton = newButton;
+                });
+              },
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: ShellCommandInput(
-            labelText: 'Terminal Command',
-            helperText: 'Command to launch terminal emulator',
-            current: config.terminal,
-            onChanged: (value) {
-              setState(() {
-                config.terminal = value;
-              });
-            },
-          ),
-        ),
-        const Divider(height: 1),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            children: [
-              const Icon(Icons.forest, size: 28),
-              const SizedBox(width: 12),
-              Text(
-                'Environment Variables',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Inner Gaps X',
+                      border: OutlineInputBorder(),
                     ),
-              ),
-            ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      final numValue = int.tryParse(value);
+                      if (numValue != null) {
+                        setState(() {
+                          config.innerGapsX = numValue;
+                        });
+                      }
+                    },
+                    controller: TextEditingController(
+                      text: config.innerGapsX.toString(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Inner Gaps Y',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      final numValue = int.tryParse(value);
+                      if (numValue != null) {
+                        setState(() {
+                          config.innerGapsY = numValue;
+                        });
+                      }
+                    },
+                    controller: TextEditingController(
+                      text: config.innerGapsY.toString(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        _EnvironmentVariablesEditor(config: config),
-        const Divider(height: 1),
-      ]),
-    );
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Outer Gaps X',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      final numValue = int.tryParse(value);
+                      if (numValue != null) {
+                        setState(() {
+                          config.outerGapsX = numValue;
+                        });
+                      }
+                    },
+                    controller: TextEditingController(
+                      text: config.outerGapsX.toString(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Outer Gaps Y',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      final numValue = int.tryParse(value);
+                      if (numValue != null) {
+                        setState(() {
+                          config.outerGapsY = numValue;
+                        });
+                      }
+                    },
+                    controller: TextEditingController(
+                      text: config.outerGapsY.toString(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: TextField(
+              decoration: const InputDecoration(
+                labelText: 'Resize Jump (px)',
+                border: OutlineInputBorder(),
+                helperText: 'Pixels to jump when resizing windows',
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                final numValue = int.tryParse(value);
+                if (numValue != null) {
+                  setState(() {
+                    config.resizeJump = numValue;
+                  });
+                }
+              },
+              controller: TextEditingController(
+                text: config.resizeJump.toString(),
+              ),
+            ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: config.animationsEnabled,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        config.animationsEnabled = value;
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(width: 8),
+                const Text('Enable Animations'),
+              ],
+            ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: ShellCommandInput(
+              labelText: 'Terminal Command',
+              helperText: 'Command to launch terminal emulator',
+              current: config.terminal,
+              onChanged: (value) {
+                setState(() {
+                  config.terminal = value;
+                });
+              },
+            ),
+          ),
+          const Divider(height: 1),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                const Icon(Icons.forest, size: 28),
+                const SizedBox(width: 12),
+                Text(
+                  'Environment Variables',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          _EnvironmentVariablesEditor(config: config),
+          const Divider(height: 1),
+        ]),
+      ))
+    ]);
   }
 }
 
