@@ -146,8 +146,6 @@ class _AnimationEditorState extends State<AnimationEditor> {
             ),
           ),
         );
-      },
-        ],
       ),
     );
   }
