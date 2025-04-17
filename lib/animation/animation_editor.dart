@@ -98,7 +98,7 @@ class _AnimationDefinitionCardState extends State<_AnimationDefinitionCard> {
             return AlertDialog(
               title: Text(
                   'Edit ${camelToSentence(widget.event.toString().split('.').last)}'),
-              content: Container(
+              content: SizedBox(
                 width: width,
                 height: height * 0.6,
                 child: SingleChildScrollView(
