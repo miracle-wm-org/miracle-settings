@@ -64,6 +64,34 @@ final _miracleConfigGetBuiltInKeyCommandsOptionsCount =
   'miracle_config_get_built_in_key_command_options_count',
 );
 
+final _miracleConfigGetAnimatableEventOptionsCount =
+    _lib.lookupFunction<Uint32 Function(), int Function()>(
+  'miracle_config_get_animateable_event_options_count',
+);
+
+final _miracleConfigGetAnimatableEventOption = _lib.lookupFunction<
+    _MiracleOption Function(Uint32),
+    _MiracleOption Function(
+        int)>("miracle_config_get_animateable_event_option");
+
+final _miracleConfigGetAnimationTypeOptionsCount =
+    _lib.lookupFunction<Uint32 Function(), int Function()>(
+  'miracle_config_get_animation_type_options_count',
+);
+
+final _miracleConfigGetAnimationTypeOption = _lib.lookupFunction<
+    _MiracleOption Function(Uint32),
+    _MiracleOption Function(int)>("miracle_config_get_animation_type_option");
+
+final _miracleConfigGetEaseFunctionOptionsCount =
+    _lib.lookupFunction<Uint32 Function(), int Function()>(
+  'miracle_config_get_ease_function_options_count',
+);
+
+final _miracleConfigGetEaseFunctionOption = _lib.lookupFunction<
+    _MiracleOption Function(Uint32),
+    _MiracleOption Function(int)>("miracle_config_get_ease_function_option");
+
 final _miracleConfigGetKeyboardActionsOption = _lib.lookupFunction<
     _MiracleOption Function(Uint32),
     _MiracleOption Function(int)>("miracle_config_get_keyboard_actions_option");
@@ -334,13 +362,13 @@ final _miracleConfigSetBorderConfig = _lib.lookupFunction<
     )>('miracle_config_set_border_config');
 
 // Animation definitions
-final _miracleConfigGetAnimationDefCount =
-    _lib.lookupFunction<UintPtr Function(), int Function()>(
-  'miracle_config_get_animation_definition_count',
-);
+final _miracleConfigGetAnimationDefCount = _lib.lookupFunction<
+        UintPtr Function(Pointer<_MiracleConfigData>),
+        int Function(Pointer<_MiracleConfigData>)>(
+    'miracle_config_get_animation_definition_count');
 
 final _miracleConfigGetAnimationDef = _lib.lookupFunction<
-    _MiracleAnimationDef Function(Pointer<_MiracleConfigData>, Int32),
+    _MiracleAnimationDef Function(Pointer<_MiracleConfigData>, UintPtr),
     _MiracleAnimationDef Function(Pointer<_MiracleConfigData>,
         int)>('miracle_config_get_animation_definition');
 
@@ -353,6 +381,11 @@ final _miracleConfigSetAnimationDef = _lib.lookupFunction<
         void Function(
             Pointer<_MiracleConfigData>, int, Pointer<_MiracleAnimationDef>)>(
     'miracle_config_set_animation_definition');
+
+final _miracleConfigResetAnimationDef = _lib.lookupFunction<
+    Void Function(Pointer<_MiracleConfigData>, Int32),
+    void Function(Pointer<_MiracleConfigData>,
+        int)>('miracle_config_reset_animation_definition');
 
 // Workspace config
 final _miracleConfigGetWorkspaceConfigCount = _lib.lookupFunction<
@@ -539,6 +572,48 @@ class MiracleConfig {
 
     for (var i = 0; i < count; i++) {
       final option = _miracleConfigGetBuiltInKeyCommandsOption(i);
+      options.add(
+        MiracleOption(name: option.name.toDartString(), value: option.value),
+      );
+    }
+
+    return options;
+  }
+
+  static List<MiracleOption> getAnimatableEventOptions() {
+    final count = _miracleConfigGetAnimatableEventOptionsCount();
+    final options = <MiracleOption>[];
+
+    for (var i = 0; i < count; i++) {
+      final option = _miracleConfigGetAnimatableEventOption(i);
+      options.add(
+        MiracleOption(name: option.name.toDartString(), value: option.value),
+      );
+    }
+
+    return options;
+  }
+
+  static List<MiracleOption> getAnimationTypeOptions() {
+    final count = _miracleConfigGetAnimationTypeOptionsCount();
+    final options = <MiracleOption>[];
+
+    for (var i = 0; i < count; i++) {
+      final option = _miracleConfigGetAnimationTypeOption(i);
+      options.add(
+        MiracleOption(name: option.name.toDartString(), value: option.value),
+      );
+    }
+
+    return options;
+  }
+
+  static List<MiracleOption> getEaseFunctionOptions() {
+    final count = _miracleConfigGetEaseFunctionOptionsCount();
+    final options = <MiracleOption>[];
+
+    for (var i = 0; i < count; i++) {
+      final option = _miracleConfigGetEaseFunctionOption(i);
       options.add(
         MiracleOption(name: option.name.toDartString(), value: option.value),
       );
@@ -816,7 +891,9 @@ class MiracleConfigData {
     calloc.free(color);
   }
 
-  // Animation definitions
+  // Animation
+  int get animationDefinitionCount => _miracleConfigGetAnimationDefCount(_ptr);
+
   MiracleAnimationDefinition getAnimationDefinition(
     MiracleAnimatableEvent event,
   ) {
@@ -854,6 +931,10 @@ class MiracleConfigData {
 
     _miracleConfigSetAnimationDef(_ptr, event.index, defPtr);
     calloc.free(defPtr);
+  }
+
+  void resetAnimationDefinition(MiracleAnimatableEvent event) {
+    _miracleConfigResetAnimationDef(_ptr, event.index);
   }
 
   // Workspace config
@@ -1037,9 +1118,11 @@ base class _MiracleBorderConfig extends Struct {
 }
 
 base class _MiracleAnimationDef extends Struct {
-  @Int32()
+  @Bool()
+  external bool is_default;
+  @Uint32()
   external int type;
-  @Int32()
+  @Uint32()
   external int function;
   @Float()
   external double duration_seconds;
