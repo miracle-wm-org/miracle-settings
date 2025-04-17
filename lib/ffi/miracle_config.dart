@@ -64,17 +64,18 @@ final _miracleConfigGetBuiltInKeyCommandsOptionsCount =
   'miracle_config_get_built_in_key_command_options_count',
 );
 
-final _miracleConfigGetAnimatableEventOptionsCount = _lib.lookupFunction<
-    Uint32 Function(), int Function()>(
+final _miracleConfigGetAnimatableEventOptionsCount =
+    _lib.lookupFunction<Uint32 Function(), int Function()>(
   'miracle_config_get_animateable_event_options_count',
 );
 
 final _miracleConfigGetAnimatableEventOption = _lib.lookupFunction<
     _MiracleOption Function(Uint32),
-    _MiracleOption Function(int)>("miracle_config_get_animateable_event_option");
+    _MiracleOption Function(
+        int)>("miracle_config_get_animateable_event_option");
 
-final _miracleConfigGetAnimationTypeOptionsCount = _lib.lookupFunction<
-    Uint32 Function(), int Function()>(
+final _miracleConfigGetAnimationTypeOptionsCount =
+    _lib.lookupFunction<Uint32 Function(), int Function()>(
   'miracle_config_get_animation_type_options_count',
 );
 
@@ -82,8 +83,8 @@ final _miracleConfigGetAnimationTypeOption = _lib.lookupFunction<
     _MiracleOption Function(Uint32),
     _MiracleOption Function(int)>("miracle_config_get_animation_type_option");
 
-final _miracleConfigGetEaseFunctionOptionsCount = _lib.lookupFunction<
-    Uint32 Function(), int Function()>(
+final _miracleConfigGetEaseFunctionOptionsCount =
+    _lib.lookupFunction<Uint32 Function(), int Function()>(
   'miracle_config_get_ease_function_options_count',
 );
 
@@ -367,7 +368,7 @@ final _miracleConfigGetAnimationDefCount = _lib.lookupFunction<
     'miracle_config_get_animation_definition_count');
 
 final _miracleConfigGetAnimationDef = _lib.lookupFunction<
-    _MiracleAnimationDef Function(Pointer<_MiracleConfigData>, Int32),
+    _MiracleAnimationDef Function(Pointer<_MiracleConfigData>, UintPtr),
     _MiracleAnimationDef Function(Pointer<_MiracleConfigData>,
         int)>('miracle_config_get_animation_definition');
 
@@ -1117,9 +1118,11 @@ base class _MiracleBorderConfig extends Struct {
 }
 
 base class _MiracleAnimationDef extends Struct {
-  @Int32()
+  @Bool()
+  external bool is_default;
+  @Uint32()
   external int type;
-  @Int32()
+  @Uint32()
   external int function;
   @Float()
   external double duration_seconds;

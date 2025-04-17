@@ -3,6 +3,7 @@ import 'package:miracle_wm_settings/applications/startup_apps_editor.dart';
 import 'package:miracle_wm_settings/border/border_editor.dart';
 import 'keybinds_editor/keybindings_editor.dart';
 import 'general/general_settings.dart';
+import 'animation/animation_editor.dart';
 import 'ffi/miracle_config.dart';
 
 void main() {
