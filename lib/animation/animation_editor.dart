@@ -129,6 +129,125 @@ class _AnimationEditorState extends State<AnimationEditor> {
                   },
                 ),
                 const SizedBox(height: 16),
+                TextFormField(
+                  initialValue: definition.c1.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'c1 (Bezier control point)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    final val = double.tryParse(value);
+                    if (val != null) {
+                      setState(() {
+                        _definitions[index] = definition.copyWith(c1: val);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  initialValue: definition.c2.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'c2 (Bezier control point)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    final val = double.tryParse(value);
+                    if (val != null) {
+                      setState(() {
+                        _definitions[index] = definition.copyWith(c2: val);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  initialValue: definition.c3.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'c3 (Bezier control point)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    final val = double.tryParse(value);
+                    if (val != null) {
+                      setState(() {
+                        _definitions[index] = definition.copyWith(c3: val);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  initialValue: definition.c4.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'c4 (Bezier control point)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    final val = double.tryParse(value);
+                    if (val != null) {
+                      setState(() {
+                        _definitions[index] = definition.copyWith(c4: val);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  initialValue: definition.c5.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'c5 (Bezier control point)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    final val = double.tryParse(value);
+                    if (val != null) {
+                      setState(() {
+                        _definitions[index] = definition.copyWith(c5: val);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  initialValue: definition.n1.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'n1 (Elastic oscillations)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    final val = double.tryParse(value);
+                    if (val != null) {
+                      setState(() {
+                        _definitions[index] = definition.copyWith(n1: val);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  initialValue: definition.d1.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'd1 (Elastic period)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    final val = double.tryParse(value);
+                    if (val != null) {
+                      setState(() {
+                        _definitions[index] = definition.copyWith(d1: val);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 16),
                 Row(
                   children: [
                     ElevatedButton(
