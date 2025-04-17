@@ -64,6 +64,33 @@ final _miracleConfigGetBuiltInKeyCommandsOptionsCount =
   'miracle_config_get_built_in_key_command_options_count',
 );
 
+final _miracleConfigGetAnimatableEventOptionsCount = _lib.lookupFunction<
+    Uint32 Function(), int Function()>(
+  'miracle_config_get_animateable_event_options_count',
+);
+
+final _miracleConfigGetAnimatableEventOption = _lib.lookupFunction<
+    _MiracleOption Function(Uint32),
+    _MiracleOption Function(int)>("miracle_config_get_animateable_event_option");
+
+final _miracleConfigGetAnimationTypeOptionsCount = _lib.lookupFunction<
+    Uint32 Function(), int Function()>(
+  'miracle_config_get_animation_type_options_count',
+);
+
+final _miracleConfigGetAnimationTypeOption = _lib.lookupFunction<
+    _MiracleOption Function(Uint32),
+    _MiracleOption Function(int)>("miracle_config_get_animation_type_option");
+
+final _miracleConfigGetEaseFunctionOptionsCount = _lib.lookupFunction<
+    Uint32 Function(), int Function()>(
+  'miracle_config_get_ease_function_options_count',
+);
+
+final _miracleConfigGetEaseFunctionOption = _lib.lookupFunction<
+    _MiracleOption Function(Uint32),
+    _MiracleOption Function(int)>("miracle_config_get_ease_function_option");
+
 final _miracleConfigGetKeyboardActionsOption = _lib.lookupFunction<
     _MiracleOption Function(Uint32),
     _MiracleOption Function(int)>("miracle_config_get_keyboard_actions_option");
