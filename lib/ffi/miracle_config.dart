@@ -551,6 +551,48 @@ class MiracleConfig {
 
     return options;
   }
+
+  static List<MiracleOption> getAnimatableEventOptions() {
+    final count = _miracleConfigGetAnimatableEventOptionsCount();
+    final options = <MiracleOption>[];
+
+    for (var i = 0; i < count; i++) {
+      final option = _miracleConfigGetAnimatableEventOption(i);
+      options.add(
+        MiracleOption(name: option.name.toDartString(), value: option.value),
+      );
+    }
+
+    return options;
+  }
+
+  static List<MiracleOption> getAnimationTypeOptions() {
+    final count = _miracleConfigGetAnimationTypeOptionsCount();
+    final options = <MiracleOption>[];
+
+    for (var i = 0; i < count; i++) {
+      final option = _miracleConfigGetAnimationTypeOption(i);
+      options.add(
+        MiracleOption(name: option.name.toDartString(), value: option.value),
+      );
+    }
+
+    return options;
+  }
+
+  static List<MiracleOption> getEaseFunctionOptions() {
+    final count = _miracleConfigGetEaseFunctionOptionsCount();
+    final options = <MiracleOption>[];
+
+    for (var i = 0; i < count; i++) {
+      final option = _miracleConfigGetEaseFunctionOption(i);
+      options.add(
+        MiracleOption(name: option.name.toDartString(), value: option.value),
+      );
+    }
+
+    return options;
+  }
 }
 
 // Extended ConfigData wrapper with all methods
