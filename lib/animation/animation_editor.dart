@@ -57,213 +57,244 @@ class _AnimationEditorState extends State<AnimationEditor> {
         
         return Card(
           margin: const EdgeInsets.only(bottom: 16.0),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
+          child: ListTile(
+            title: Text(
+              event.toString().split('.').last,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  event.toString().split('.').last,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<MiracleAnimationType>(
-                  value: definition.type,
-                  items: MiracleAnimationType.values
-                      .where((t) => t != MiracleAnimationType.max)
-                      .map((type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(type.toString().split('.').last),
-                    );
-                  }).toList(),
-                  onChanged: (type) {
-                    if (type == null) return;
-                    setState(() {
-                      _definitions[index] = definition.copyWith(type: type);
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Animation Type',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<MiracleEaseFunction>(
-                  value: definition.function,
-                  items: MiracleEaseFunction.values
-                      .where((f) => f != MiracleEaseFunction.max)
-                      .map((function) {
-                    return DropdownMenuItem(
-                      value: function,
-                      child: Text(function.toString().split('.').last),
-                    );
-                  }).toList(),
-                  onChanged: (function) {
-                    if (function == null) return;
-                    setState(() {
-                      _definitions[index] = definition.copyWith(function: function);
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Easing Function',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  initialValue: definition.durationSeconds.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'Duration (seconds)',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final duration = double.tryParse(value);
-                    if (duration != null) {
-                      setState(() {
-                        _definitions[index] = 
-                            definition.copyWith(durationSeconds: duration);
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  initialValue: definition.c1.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'c1 (Bezier control point)',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final val = double.tryParse(value);
-                    if (val != null) {
-                      setState(() {
-                        _definitions[index] = definition.copyWith(c1: val);
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  initialValue: definition.c2.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'c2 (Bezier control point)',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final val = double.tryParse(value);
-                    if (val != null) {
-                      setState(() {
-                        _definitions[index] = definition.copyWith(c2: val);
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  initialValue: definition.c3.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'c3 (Bezier control point)',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final val = double.tryParse(value);
-                    if (val != null) {
-                      setState(() {
-                        _definitions[index] = definition.copyWith(c3: val);
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  initialValue: definition.c4.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'c4 (Bezier control point)',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final val = double.tryParse(value);
-                    if (val != null) {
-                      setState(() {
-                        _definitions[index] = definition.copyWith(c4: val);
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  initialValue: definition.c5.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'c5 (Bezier control point)',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final val = double.tryParse(value);
-                    if (val != null) {
-                      setState(() {
-                        _definitions[index] = definition.copyWith(c5: val);
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  initialValue: definition.n1.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'n1 (Elastic oscillations)',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final val = double.tryParse(value);
-                    if (val != null) {
-                      setState(() {
-                        _definitions[index] = definition.copyWith(n1: val);
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 8),
-                TextFormField(
-                  initialValue: definition.d1.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'd1 (Elastic period)',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    final val = double.tryParse(value);
-                    if (val != null) {
-                      setState(() {
-                        _definitions[index] = definition.copyWith(d1: val);
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                Row(
+                Text('Type: ${definition.type.toString().split('.').last}'),
+                Text('Easing: ${definition.function.toString().split('.').last}'),
+                Text('Duration: ${definition.durationSeconds.toStringAsFixed(2)}s'),
+              ],
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () => _showEditDialog(context, index),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showEditDialog(BuildContext context, int index) {
+    final event = MiracleAnimatableEvent.values[index];
+    var editedDefinition = _definitions[index];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text('Edit ${event.toString().split('.').last}'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    ElevatedButton(
-                      onPressed: () => _saveDefinition(index),
-                      child: const Text('Save'),
+                    DropdownButtonFormField<MiracleAnimationType>(
+                      value: editedDefinition.type,
+                      items: MiracleAnimationType.values
+                          .where((t) => t != MiracleAnimationType.max)
+                          .map((type) {
+                        return DropdownMenuItem(
+                          value: type,
+                          child: Text(type.toString().split('.').last),
+                        );
+                      }).toList(),
+                      onChanged: (type) {
+                        if (type == null) return;
+                        setState(() {
+                          editedDefinition = editedDefinition.copyWith(type: type);
+                        });
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Animation Type',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                    const SizedBox(width: 16),
-                    OutlinedButton(
-                      onPressed: () => _resetDefinition(index),
-                      child: const Text('Reset to Default'),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<MiracleEaseFunction>(
+                      value: editedDefinition.function,
+                      items: MiracleEaseFunction.values
+                          .where((f) => f != MiracleEaseFunction.max)
+                          .map((function) {
+                        return DropdownMenuItem(
+                          value: function,
+                          child: Text(function.toString().split('.').last),
+                        );
+                      }).toList(),
+                      onChanged: (function) {
+                        if (function == null) return;
+                        setState(() {
+                          editedDefinition = editedDefinition.copyWith(function: function);
+                        });
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Easing Function',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      initialValue: editedDefinition.durationSeconds.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'Duration (seconds)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final duration = double.tryParse(value);
+                        if (duration != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(durationSeconds: duration);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      initialValue: editedDefinition.c1.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'c1 (Bezier control point)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(c1: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.c2.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'c2 (Bezier control point)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(c2: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.c3.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'c3 (Bezier control point)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(c3: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.c4.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'c4 (Bezier control point)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(c4: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.c5.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'c5 (Bezier control point)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(c5: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.n1.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'n1 (Elastic oscillations)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(n1: val);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      initialValue: editedDefinition.d1.toString(),
+                      decoration: const InputDecoration(
+                        labelText: 'd1 (Elastic period)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final val = double.tryParse(value);
+                        if (val != null) {
+                          setState(() {
+                            editedDefinition = editedDefinition.copyWith(d1: val);
+                          });
+                        }
+                      },
                     ),
                   ],
                 ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _definitions[index] = editedDefinition;
+                    });
+                    _saveDefinition(index);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Save'),
+                ),
               ],
-            ),
-          ),
+            );
+          },
         );
       },
     );
