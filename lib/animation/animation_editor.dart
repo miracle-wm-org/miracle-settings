@@ -11,147 +11,142 @@ class AnimationEditor extends StatefulWidget {
 }
 
 class _AnimationEditorState extends State<AnimationEditor> {
-  late List<MiracleAnimatableEvent> _events;
-  MiracleAnimatableEvent? _selectedEvent;
-  MiracleAnimationDefinition? _currentDefinition;
+  late List<MiracleAnimationDefinition> _definitions;
 
   @override
   void initState() {
     super.initState();
-    _events = MiracleAnimatableEvent.values
-        .where((e) => e != MiracleAnimatableEvent.max)
-        .toList();
-    _selectedEvent = _events.first;
-    _loadCurrentDefinition();
+    _loadAllDefinitions();
   }
 
-  void _loadCurrentDefinition() {
-    if (_selectedEvent == null) return;
-    setState(() {
-      _currentDefinition = widget.config.getAnimationDefinition(_selectedEvent!);
+  void _loadAllDefinitions() {
+    final count = widget.config.animationDefinitionCount;
+    _definitions = List.generate(count, (index) {
+      return widget.config.getAnimationDefinition(
+        MiracleAnimatableEvent.values[index]
+      );
     });
   }
 
-  void _saveDefinition() {
-    if (_selectedEvent == null || _currentDefinition == null) return;
-    widget.config.setAnimationDefinition(_selectedEvent!, _currentDefinition!);
-    setState(() {});
+  void _saveDefinition(int index) {
+    widget.config.setAnimationDefinition(
+      MiracleAnimatableEvent.values[index],
+      _definitions[index]
+    );
   }
 
-  void _resetDefinition() {
-    if (_selectedEvent == null) return;
-    widget.config.resetAnimationDefinition(_selectedEvent!);
-    _loadCurrentDefinition();
+  void _resetDefinition(int index) {
+    widget.config.resetAnimationDefinition(
+      MiracleAnimatableEvent.values[index]
+    );
+    setState(() {
+      _definitions[index] = widget.config.getAnimationDefinition(
+        MiracleAnimatableEvent.values[index]
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return ListView.builder(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DropdownButtonFormField<MiracleAnimatableEvent>(
-            value: _selectedEvent,
-            items: _events.map((event) {
-              return DropdownMenuItem(
-                value: event,
-                child: Text(
-                  event.toString().split('.').last,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              );
-            }).toList(),
-            onChanged: (event) {
-              setState(() {
-                _selectedEvent = event;
-                _loadCurrentDefinition();
-              });
-            },
-            decoration: const InputDecoration(
-              labelText: 'Animation Event',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 20),
-          if (_currentDefinition != null) ...[
-            DropdownButtonFormField<MiracleAnimationType>(
-              value: _currentDefinition!.type,
-              items: MiracleAnimationType.values
-                  .where((t) => t != MiracleAnimationType.max)
-                  .map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(type.toString().split('.').last),
-                );
-              }).toList(),
-              onChanged: (type) {
-                if (type == null) return;
-                setState(() {
-                  _currentDefinition = _currentDefinition!.copyWith(type: type);
-                });
-              },
-              decoration: const InputDecoration(
-                labelText: 'Animation Type',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<MiracleEaseFunction>(
-              value: _currentDefinition!.function,
-              items: MiracleEaseFunction.values
-                  .where((f) => f != MiracleEaseFunction.max)
-                  .map((function) {
-                return DropdownMenuItem(
-                  value: function,
-                  child: Text(function.toString().split('.').last),
-                );
-              }).toList(),
-              onChanged: (function) {
-                if (function == null) return;
-                setState(() {
-                  _currentDefinition =
-                      _currentDefinition!.copyWith(function: function);
-                });
-              },
-              decoration: const InputDecoration(
-                labelText: 'Easing Function',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              initialValue: _currentDefinition!.durationSeconds.toString(),
-              decoration: const InputDecoration(
-                labelText: 'Duration (seconds)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                final duration = double.tryParse(value);
-                if (duration != null) {
-                  setState(() {
-                    _currentDefinition = _currentDefinition!
-                        .copyWith(durationSeconds: duration);
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 24),
-            Row(
+      itemCount: _definitions.length,
+      itemBuilder: (context, index) {
+        final event = MiracleAnimatableEvent.values[index];
+        final definition = _definitions[index];
+        
+        return Card(
+          margin: const EdgeInsets.only(bottom: 16.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ElevatedButton(
-                  onPressed: _saveDefinition,
-                  child: const Text('Save'),
+                Text(
+                  event.toString().split('.').last,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-                const SizedBox(width: 16),
-                OutlinedButton(
-                  onPressed: _resetDefinition,
-                  child: const Text('Reset to Default'),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<MiracleAnimationType>(
+                  value: definition.type,
+                  items: MiracleAnimationType.values
+                      .where((t) => t != MiracleAnimationType.max)
+                      .map((type) {
+                    return DropdownMenuItem(
+                      value: type,
+                      child: Text(type.toString().split('.').last),
+                    );
+                  }).toList(),
+                  onChanged: (type) {
+                    if (type == null) return;
+                    setState(() {
+                      _definitions[index] = definition.copyWith(type: type);
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Animation Type',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<MiracleEaseFunction>(
+                  value: definition.function,
+                  items: MiracleEaseFunction.values
+                      .where((f) => f != MiracleEaseFunction.max)
+                      .map((function) {
+                    return DropdownMenuItem(
+                      value: function,
+                      child: Text(function.toString().split('.').last),
+                    );
+                  }).toList(),
+                  onChanged: (function) {
+                    if (function == null) return;
+                    setState(() {
+                      _definitions[index] = definition.copyWith(function: function);
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Easing Function',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  initialValue: definition.durationSeconds.toString(),
+                  decoration: const InputDecoration(
+                    labelText: 'Duration (seconds)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    final duration = double.tryParse(value);
+                    if (duration != null) {
+                      setState(() {
+                        _definitions[index] = 
+                            definition.copyWith(durationSeconds: duration);
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => _saveDefinition(index),
+                      child: const Text('Save'),
+                    ),
+                    const SizedBox(width: 16),
+                    OutlinedButton(
+                      onPressed: () => _resetDefinition(index),
+                      child: const Text('Reset to Default'),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
+        );
+      },
         ],
       ),
     );
