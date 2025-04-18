@@ -57,14 +57,14 @@ class _StartupAppsEditorState extends State<StartupAppsEditor> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             children: [
               const Icon(Icons.apps, size: 28),
               const SizedBox(width: 12),
               Text(
                 'Startup Applications',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -77,6 +77,7 @@ class _StartupAppsEditorState extends State<StartupAppsEditor> {
             ],
           ),
         ),
+        const Divider(height: 1),
         Expanded(
           child: ListView.builder(
             itemCount: _apps.length,

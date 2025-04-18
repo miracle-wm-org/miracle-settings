@@ -14,17 +14,38 @@ class AnimationEditor extends StatelessWidget {
       return config
           .getAnimationDefinition(MiracleAnimatableEvent.values[index]);
     });
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: definitions.length,
-      itemBuilder: (context, index) {
-        final event = MiracleAnimatableEvent.values[index];
-        final definition = definitions[index];
 
-        return _AnimationDefinitionCard(
-            event: event, definition: definition, config: config);
-      },
-    );
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          children: [
+            const Icon(Icons.animation, size: 28),
+            const SizedBox(width: 12),
+            Text(
+              'Animations',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ],
+        ),
+      ),
+      const Divider(height: 1),
+      Expanded(
+          child: SingleChildScrollView(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Column(children: [
+                    ...definitions.asMap().entries.map((entry) {
+                      final event = MiracleAnimatableEvent.values[entry.key];
+                      final definition = definitions[entry.key];
+
+                      return _AnimationDefinitionCard(
+                          event: event, definition: definition, config: config);
+                    })
+                  ]))))
+    ]);
   }
 }
 

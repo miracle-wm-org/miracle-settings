@@ -19,7 +19,7 @@ class _KeybindingsEditorState extends State<KeybindingsEditor> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             children: [
               const Icon(Icons.keyboard, size: 28),

@@ -75,20 +75,21 @@ class _BorderEditorState extends State<BorderEditor> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             children: [
               const Icon(Icons.border_all, size: 28),
               const SizedBox(width: 12),
               Text(
                 'Border Configuration',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
             ],
           ),
         ),
+        const Divider(height: 1),
         Card(
           margin: const EdgeInsets.all(16),
           child: Padding(
