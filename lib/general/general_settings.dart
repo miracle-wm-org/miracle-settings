@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'drag_and_drop_editor.dart';
 import 'package:miracle_wm_settings/ffi/miracle_config.dart';
 import 'package:miracle_wm_settings/general/primary_modifier_editor.dart';
 import 'package:miracle_wm_settings/general/primary_button_editor.dart';
@@ -41,7 +42,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -217,32 +218,29 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                               });
                             },
                           ),
-                        ),
-                        const Divider(height: 1),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.forest, size: 28),
-                              const SizedBox(width: 12),
-                              Text(
-                                'Environment Variables',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Divider(height: 1),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: DragAndDropEditor(config: config),
-                        ),
+                        )
                       ]),
+                ),
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: DragAndDropEditor(config: config),
+                ),
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.forest, size: 28),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Environment Variables',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ],
+                  ),
                 ),
                 _EnvironmentVariablesEditor(config: config)
               ],

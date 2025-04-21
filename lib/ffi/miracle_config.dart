@@ -972,17 +972,17 @@ class MiracleConfigData {
       _miracleConfigSetMoveModifier(_ptr, modifier);
 
   // Drag and drop
-  // MiracleDragAndDropConfig get dragAndDrop {
-  //   final config = _miracleConfigGetDragAndDrop(_ptr);
-  //   return MiracleDragAndDropConfig(
-  //     enabled: config.enabled,
-  //     modifiers: config.modifiers,
-  //   );
-  // }
+  MiracleDragAndDropConfig get dragAndDrop {
+    final config = _miracleConfigGetDragAndDrop(_ptr);
+    return MiracleDragAndDropConfig(
+      enabled: config.enabled,
+      modifiers: config.modifiers,
+    );
+  }
 
-  // set dragAndDrop(MiracleDragAndDropConfig config) {
-  //   _miracleConfigSetDragAndDrop(_ptr, config.enabled, config.modifiers);
-  // }
+  set dragAndDrop(MiracleDragAndDropConfig config) {
+    _miracleConfigSetDragAndDrop(_ptr, config.enabled, config.modifiers);
+  }
 }
 
 // Error types
@@ -1229,6 +1229,16 @@ class MiracleWorkspaceConfig {
     required this.num,
     required this.containerType,
     this.name,
+  });
+}
+
+class MiracleDragAndDropConfig {
+  final bool enabled;
+  final int modifiers;
+
+  MiracleDragAndDropConfig({
+    required this.enabled,
+    required this.modifiers,
   });
 }
 
