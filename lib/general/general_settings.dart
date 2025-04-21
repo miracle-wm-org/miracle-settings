@@ -237,10 +237,14 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                             ],
                           ),
                         ),
+                        const Divider(height: 1),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: DragAndDropEditor(config: config),
+                        ),
                       ]),
                 ),
                 _EnvironmentVariablesEditor(config: config)
-                // We'll add more sections here later
               ],
             ),
           ),
