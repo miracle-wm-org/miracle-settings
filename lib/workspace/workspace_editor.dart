@@ -93,46 +93,59 @@ class _WorkspaceEditorState extends State<WorkspaceEditor> {
         ),
         const Divider(height: 1),
         Expanded(
-            child: SingleChildScrollView(
-                child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ..._workspaces.map(
-                (ws) {
-                  final index = _workspaces.indexOf(ws);
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 4.0),
-                    child: ListTile(
-                      title: Text(ws.name ??
-                          (ws.num >= 0 ? 'Workspace ${ws.num}' : 'Anonymous')),
-                      subtitle: ws.name != null
-                          ? (ws.num >= 0
-                              ? Text('Workspace ${ws.num}')
-                              : Text('Anonymous'))
-                          : null,
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () => _editWorkspace(index),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () => _removeWorkspace(index),
-                          ),
-                        ],
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: _workspaces.isEmpty
+                  ? const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Text(
+                          'No workspace configurations yet.\nClick the + button to add one.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ..._workspaces.map(
+                          (ws) {
+                            final index = _workspaces.indexOf(ws);
+                            return Card(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 4.0),
+                              child: ListTile(
+                                title: Text(ws.name ??
+                                    (ws.num >= 0 ? 'Workspace ${ws.num}' : 'Anonymous')),
+                                subtitle: ws.name != null
+                                    ? (ws.num >= 0
+                                        ? Text('Workspace ${ws.num}')
+                                        : Text('Anonymous'))
+                                    : null,
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () => _editWorkspace(index),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () => _removeWorkspace(index),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      ],
                     ),
-                  );
-                },
-              )
-            ],
+            ),
           ),
-        )))
+        )
       ],
     );
   }
