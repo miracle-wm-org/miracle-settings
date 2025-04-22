@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_wm_settings/ffi/miracle_config.dart';
+import 'package:miracle_wm_settings/shared/helpers.dart';
 
 class WorkspaceEditor extends StatefulWidget {
   const WorkspaceEditor({required this.config, super.key});
@@ -92,38 +93,46 @@ class _WorkspaceEditorState extends State<WorkspaceEditor> {
         ),
         const Divider(height: 1),
         Expanded(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ListView.builder(
-            itemCount: _workspaces.length,
-            itemBuilder: (context, index) {
-              final ws = _workspaces[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-                child: ListTile(
-                  title: Text(ws.name ?? 'Workspace ${ws.num}'),
-                  subtitle: ws.name != null 
-                      ? Text('Workspace ${ws.num}') 
-                      : null,
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () => _editWorkspace(index),
+            child: SingleChildScrollView(
+                child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ..._workspaces.map(
+                (ws) {
+                  final index = _workspaces.indexOf(ws);
+                  return Card(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 4.0),
+                    child: ListTile(
+                      title: Text(ws.name ??
+                          (ws.num >= 0 ? 'Workspace ${ws.num}' : 'Anonymous')),
+                      subtitle: ws.name != null
+                          ? (ws.num >= 0
+                              ? Text('Workspace ${ws.num}')
+                              : Text('Anonymous'))
+                          : null,
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () => _editWorkspace(index),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => _removeWorkspace(index),
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () => _removeWorkspace(index),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
+                    ),
+                  );
+                },
+              )
+            ],
           ),
-        ),
+        )))
       ],
     );
   }
@@ -147,7 +156,11 @@ class _WorkspaceConfigDialogState extends State<_WorkspaceConfigDialog> {
   void initState() {
     super.initState();
     _numController = TextEditingController(
-      text: widget.initialConfig?.num.toString() ?? '',
+      text: widget.initialConfig != null
+          ? (widget.initialConfig!.num >= 0
+              ? widget.initialConfig!.num.toString()
+              : '')
+          : '',
     );
     _nameController = TextEditingController(
       text: widget.initialConfig?.name ?? '',
@@ -165,9 +178,8 @@ class _WorkspaceConfigDialogState extends State<_WorkspaceConfigDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.initialConfig == null 
-          ? 'Add Workspace' 
-          : 'Edit Workspace'),
+      title: Text(
+          widget.initialConfig == null ? 'Add Workspace' : 'Edit Workspace'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -190,11 +202,14 @@ class _WorkspaceConfigDialogState extends State<_WorkspaceConfigDialog> {
           const SizedBox(height: 16),
           DropdownButtonFormField<int>(
             value: _containerType,
-            items: const [
-              DropdownMenuItem(value: 0, child: Text('Default')),
-              DropdownMenuItem(value: 1, child: Text('Tabbed')),
-              DropdownMenuItem(value: 2, child: Text('Stacked')),
-            ],
+            items: MiracleConfig.getContainerLayoutOptions()
+                .map(
+                  (e) => DropdownMenuItem<int>(
+                    value: e.value,
+                    child: Text(camelToSentence(e.name)),
+                  ),
+                )
+                .toList(),
             onChanged: (value) {
               if (value != null) {
                 setState(() {
@@ -228,9 +243,10 @@ class _WorkspaceConfigDialogState extends State<_WorkspaceConfigDialog> {
             Navigator.pop(
               context,
               MiracleWorkspaceConfig(
-                num: num ?? 0,
+                num: num ?? -1,
                 containerType: _containerType,
-                name: _nameController.text.isEmpty ? null : _nameController.text,
+                name:
+                    _nameController.text.isEmpty ? null : _nameController.text,
               ),
             );
           },
