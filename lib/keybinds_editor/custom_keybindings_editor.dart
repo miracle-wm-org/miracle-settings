@@ -219,7 +219,6 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                     actionKey: 0,
                     command: '',
                     onSave: (action, modifiers, actionKey, command, _) {
-                      Navigator.of(context).pop();
                       widget.config.addCustomKeyCommand(
                         action,
                         modifiers,

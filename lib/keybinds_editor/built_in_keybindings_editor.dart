@@ -195,14 +195,12 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                   child: KeybindEditorScreen(
                     label: "Add Built-in Keybinding",
                     isSelectingBuiltIn: true,
-                    action: MiracleConfig.getKeyboardActionsOptions()
-                        .first
-                        .value,
+                    action:
+                        MiracleConfig.getKeyboardActionsOptions().first.value,
                     modifiers: 0,
                     actionKey: 0,
                     builtInAction: 0,
                     onSave: (action, modifiers, actionKey, _, builtInAction) {
-                      Navigator.of(context).pop();
                       widget.config.addBuiltInKeyCommand(
                         action,
                         modifiers,

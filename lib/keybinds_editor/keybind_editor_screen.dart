@@ -64,8 +64,6 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
 
     widget.onSave(_selectedAction, _selectedModifiers, _selectedKey,
         _commandController.text, _selectedBuiltInAction);
-
-    Navigator.of(context).pop();
   }
 
   @override
@@ -134,7 +132,10 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: _saveKeybind,
+                  onPressed: () {
+                    _saveKeybind();
+                    Navigator.of(context).pop();
+                  },
                   child: const Text('Save'),
                 ),
               ],
