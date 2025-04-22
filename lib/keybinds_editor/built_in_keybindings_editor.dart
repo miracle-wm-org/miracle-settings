@@ -148,6 +148,7 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                                         builtInAction: e.value.builtInAction,
                                         onSave: (action, modifiers, actionKey,
                                             _, builtInAction) {
+                                          Navigator.of(context).pop();
                                           widget.config.updateBuiltInKeyCommand(
                                             e.key,
                                             action,
@@ -159,7 +160,6 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                                             _keyCommands = widget.config
                                                 .getBuiltInKeyCommands();
                                           });
-                                          Navigator.of(context).pop();
                                         },
                                       ),
                                     ),
@@ -202,6 +202,7 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                     actionKey: 0,
                     builtInAction: 0,
                     onSave: (action, modifiers, actionKey, _, builtInAction) {
+                      Navigator.of(context).pop();
                       widget.config.addBuiltInKeyCommand(
                         action,
                         modifiers,
@@ -211,7 +212,6 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                       setState(() {
                         _keyCommands = widget.config.getBuiltInKeyCommands();
                       });
-                      Navigator.of(context).pop();
                     },
                   ),
                 ),

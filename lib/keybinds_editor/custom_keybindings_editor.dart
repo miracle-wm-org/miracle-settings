@@ -167,6 +167,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                                         command: e.value.command,
                                         onSave: (action, modifiers, actionKey,
                                             command, _) {
+                                          Navigator.of(context).pop();
                                           widget.config.editCustomKeyCommand(
                                             e.key,
                                             action,
@@ -178,7 +179,6 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                                             _keyCommands = widget.config
                                                 .getCustomKeyCommands();
                                           });
-                                          Navigator.of(context).pop();
                                         },
                                       ),
                                     ),
@@ -219,6 +219,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                     actionKey: 0,
                     command: '',
                     onSave: (action, modifiers, actionKey, command, _) {
+                      Navigator.of(context).pop();
                       widget.config.addCustomKeyCommand(
                         action,
                         modifiers,
@@ -228,7 +229,6 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                       setState(() {
                         _keyCommands = widget.config.getCustomKeyCommands();
                       });
-                      Navigator.of(context).pop();
                     },
                   ),
                 ),
