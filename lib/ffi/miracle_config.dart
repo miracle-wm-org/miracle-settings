@@ -96,6 +96,15 @@ final _miracleConfigGetKeyboardActionsOption = _lib.lookupFunction<
     _MiracleOption Function(Uint32),
     _MiracleOption Function(int)>("miracle_config_get_keyboard_actions_option");
 
+final _miracleConfigGetContainerLayoutOptionsCount =
+    _lib.lookupFunction<Uint32 Function(), int Function()>(
+  'miracle_config_get_layout_options_count',
+);
+
+final _miracleConfigGetContainerLayoutOption = _lib.lookupFunction<
+    _MiracleOption Function(Uint32),
+    _MiracleOption Function(int)>("miracle_config_get_layout_option");
+
 final _miracleConfigGetPrimaryModifier = _lib.lookupFunction<
     Uint32 Function(Pointer<_MiracleConfigData>),
     int Function(
@@ -403,10 +412,11 @@ final _miracleConfigAddWorkspaceConfig = _lib.lookupFunction<
     void Function(Pointer<_MiracleConfigData>, int, int,
         Pointer<Utf8>)>('miracle_config_add_workspace_config');
 
-final _miracleConfigClearWorkspaceConfigs = _lib.lookupFunction<
-    Void Function(Pointer<_MiracleConfigData>),
-    void Function(
-        Pointer<_MiracleConfigData>)>('miracle_config_clear_workspace_configs');
+final _miracleConfigSetWorkspaceConfig = _lib.lookupFunction<
+    Void Function(
+        Pointer<_MiracleConfigData>, Uint32, Int32, Int32, Pointer<Utf8>),
+    void Function(Pointer<_MiracleConfigData>, int, int, int,
+        Pointer<Utf8>)>('miracle_config_set_workspace_config');
 
 final _miracleConfigRemoveWorkspaceConfig = _lib.lookupFunction<
     Bool Function(Pointer<_MiracleConfigData>, UintPtr),
@@ -614,6 +624,20 @@ class MiracleConfig {
 
     for (var i = 0; i < count; i++) {
       final option = _miracleConfigGetEaseFunctionOption(i);
+      options.add(
+        MiracleOption(name: option.name.toDartString(), value: option.value),
+      );
+    }
+
+    return options;
+  }
+
+  static List<MiracleOption> getContainerLayoutOptions() {
+    final count = _miracleConfigGetContainerLayoutOptionsCount();
+    final options = <MiracleOption>[];
+
+    for (var i = 0; i < count; i++) {
+      final option = _miracleConfigGetContainerLayoutOption(i);
       options.add(
         MiracleOption(name: option.name.toDartString(), value: option.value),
       );
@@ -962,7 +986,13 @@ class MiracleConfigData {
     if (name != null) malloc.free(namePtr);
   }
 
-  void clearWorkspaceConfigs() => _miracleConfigClearWorkspaceConfigs(_ptr);
+  void setWorkspaceConfig(int index, int num, int containerType,
+      {String? name}) {
+    final namePtr = name?.toNativeUtf8() ?? nullptr;
+    _miracleConfigSetWorkspaceConfig(_ptr, index, num, containerType, namePtr);
+    if (name != null) malloc.free(namePtr);
+  }
+
   bool removeWorkspaceConfig(int index) =>
       _miracleConfigRemoveWorkspaceConfig(_ptr, index);
 
