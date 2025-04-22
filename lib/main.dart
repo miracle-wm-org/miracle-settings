@@ -4,6 +4,7 @@ import 'package:miracle_wm_settings/border/border_editor.dart';
 import 'keybinds_editor/keybindings_editor.dart';
 import 'general/general_settings.dart';
 import 'animation/animation_editor.dart';
+import 'workspace/workspace_editor.dart';
 import 'ffi/miracle_config.dart';
 
 void main() {
@@ -65,10 +66,6 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
       label: Text('Borders'),
     ),
     NavigationRailDestination(
-      icon: Icon(Icons.space_dashboard),
-      label: Text('Layouts'),
-    ),
-    NavigationRailDestination(
       icon: Icon(Icons.animation),
       label: Text('Animations'),
     ),
@@ -78,9 +75,8 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
     (SettingsHomePage home) => GeneralSettings(config: home.config),
     (SettingsHomePage home) => KeybindingsEditor(config: home.config),
     (SettingsHomePage home) => StartupAppsEditor(config: home.config),
-    (SettingsHomePage home) => Center(child: Text('Workspace Configuration')),
+    (SettingsHomePage home) => WorkspaceEditor(config: home.config),
     (SettingsHomePage home) => BorderEditor(config: home.config),
-    (SettingsHomePage home) => Center(child: Text('Layout Preferences')),
     (SettingsHomePage home) => AnimationEditor(config: home.config),
   ];
 
