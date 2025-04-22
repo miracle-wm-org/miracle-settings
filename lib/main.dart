@@ -78,7 +78,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
     (SettingsHomePage home) => GeneralSettings(config: home.config),
     (SettingsHomePage home) => KeybindingsEditor(config: home.config),
     (SettingsHomePage home) => StartupAppsEditor(config: home.config),
-    (SettingsHomePage home) => Center(child: Text('Workspace Configuration')),
+    (SettingsHomePage home) => WorkspaceEditor(config: home.config),
     (SettingsHomePage home) => BorderEditor(config: home.config),
     (SettingsHomePage home) => Center(child: Text('Layout Preferences')),
     (SettingsHomePage home) => AnimationEditor(config: home.config),
