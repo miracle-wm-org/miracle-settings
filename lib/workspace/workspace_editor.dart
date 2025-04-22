@@ -68,16 +68,21 @@ class _WorkspaceEditorState extends State<WorkspaceEditor> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              const Icon(Icons.space_dashboard, size: 28),
+              const SizedBox(width: 12),
               Text(
-                'Workspace Configurations',
-                style: Theme.of(context).textTheme.titleLarge,
+                'Workspaces',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
+              const Spacer(),
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: _addWorkspace,
@@ -85,12 +90,17 @@ class _WorkspaceEditorState extends State<WorkspaceEditor> {
             ],
           ),
         ),
+        const Divider(height: 1),
         Expanded(
-          child: ListView.builder(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ListView.builder(
             itemCount: _workspaces.length,
             itemBuilder: (context, index) {
               final ws = _workspaces[index];
               return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 child: ListTile(
                   title: Text(ws.name ?? 'Workspace ${ws.num}'),
                   subtitle: ws.name != null 
