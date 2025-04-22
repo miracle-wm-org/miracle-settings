@@ -70,18 +70,10 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.label),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _saveKeybind,
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 600),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -132,9 +124,20 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
                 ),
               ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveKeybind,
-              child: const Text('Save Keybind'),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancel'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: _saveKeybind,
+                  child: const Text('Save'),
+                ),
+              ],
             ),
           ],
         ),

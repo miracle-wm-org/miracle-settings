@@ -136,16 +136,16 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                                 icon: const Icon(Icons.edit_outlined, size: 20),
                                 color: Colors.black54,
                                 onPressed: () {
-                                  Navigator.of(context)
-                                      .push(
-                                    MaterialPageRoute(
-                                      builder: (context) => KeybindEditorScreen(
-                                        label: "Edit Custom Keybinding",
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      child: KeybindEditorScreen(
+                                        label: "Edit Built-in Keybinding",
                                         isSelectingBuiltIn: true,
                                         action: e.value.action,
                                         modifiers: e.value.modifiers,
                                         actionKey: e.value.key,
-                                        builtInAction: e.value.action,
+                                        builtInAction: e.value.builtInAction,
                                         onSave: (action, modifiers, actionKey,
                                             _, builtInAction) {
                                           widget.config.updateBuiltInKeyCommand(
@@ -159,16 +159,11 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                                             _keyCommands = widget.config
                                                 .getBuiltInKeyCommands();
                                           });
+                                          Navigator.of(context).pop();
                                         },
                                       ),
                                     ),
-                                  )
-                                      .then((_) {
-                                    setState(() {
-                                      _keyCommands =
-                                          widget.config.getBuiltInKeyCommands();
-                                    });
-                                  });
+                                  );
                                 },
                               ),
                               IconButton(
@@ -194,35 +189,33 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(
-                      builder: (context) => KeybindEditorScreen(
-                          label: "Add Custom Keybinding",
-                          isSelectingBuiltIn: true,
-                          action: MiracleConfig.getKeyboardActionsOptions()
-                              .first
-                              .value,
-                          modifiers: 0,
-                          actionKey: 0,
-                          builtInAction: 0,
-                          onSave:
-                              (action, modifiers, actionKey, _, builtInAction) {
-                            widget.config.addBuiltInKeyCommand(
-                              action,
-                              modifiers,
-                              actionKey,
-                              builtInAction!,
-                            );
-                            setState(() {
-                              _keyCommands =
-                                  widget.config.getBuiltInKeyCommands();
-                            });
-                          })))
-                  .then((_) {
-                setState(() {
-                  _keyCommands = widget.config.getBuiltInKeyCommands();
-                });
-              });
+              showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  child: KeybindEditorScreen(
+                    label: "Add Built-in Keybinding",
+                    isSelectingBuiltIn: true,
+                    action: MiracleConfig.getKeyboardActionsOptions()
+                        .first
+                        .value,
+                    modifiers: 0,
+                    actionKey: 0,
+                    builtInAction: 0,
+                    onSave: (action, modifiers, actionKey, _, builtInAction) {
+                      widget.config.addBuiltInKeyCommand(
+                        action,
+                        modifiers,
+                        actionKey,
+                        builtInAction!,
+                      );
+                      setState(() {
+                        _keyCommands = widget.config.getBuiltInKeyCommands();
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              );
             },
             child: const Text('Add Keybind'),
           ),

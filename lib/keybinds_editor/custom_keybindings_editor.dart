@@ -155,10 +155,10 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                                 icon: const Icon(Icons.edit_outlined, size: 20),
                                 color: Colors.black54,
                                 onPressed: () {
-                                  Navigator.of(context)
-                                      .push(
-                                    MaterialPageRoute(
-                                      builder: (context) => KeybindEditorScreen(
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      child: KeybindEditorScreen(
                                         label: "Edit Custom Keybinding",
                                         isSelectingBuiltIn: false,
                                         action: e.value.action,
@@ -178,16 +178,11 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                                             _keyCommands = widget.config
                                                 .getCustomKeyCommands();
                                           });
+                                          Navigator.of(context).pop();
                                         },
                                       ),
                                     ),
-                                  )
-                                      .then((_) {
-                                    setState(() {
-                                      _keyCommands =
-                                          widget.config.getCustomKeyCommands();
-                                    });
-                                  });
+                                  );
                                 },
                               ),
                               IconButton(
@@ -212,35 +207,32 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context)
-                  .push(
-                MaterialPageRoute(
-                  builder: (context) => KeybindEditorScreen(
-                      label: "Add Custom Keybinding",
-                      isSelectingBuiltIn: false,
-                      action:
-                          MiracleConfig.getKeyboardActionsOptions().first.value,
-                      modifiers: 0,
-                      actionKey: 0,
-                      command: '',
-                      onSave: (action, modifiers, actionKey, command, _) {
-                        widget.config.addCustomKeyCommand(
-                          action,
-                          modifiers,
-                          actionKey,
-                          command!,
-                        );
-                        setState(() {
-                          _keyCommands = widget.config.getCustomKeyCommands();
-                        });
-                      }),
+              showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  child: KeybindEditorScreen(
+                    label: "Add Custom Keybinding",
+                    isSelectingBuiltIn: false,
+                    action:
+                        MiracleConfig.getKeyboardActionsOptions().first.value,
+                    modifiers: 0,
+                    actionKey: 0,
+                    command: '',
+                    onSave: (action, modifiers, actionKey, command, _) {
+                      widget.config.addCustomKeyCommand(
+                        action,
+                        modifiers,
+                        actionKey,
+                        command!,
+                      );
+                      setState(() {
+                        _keyCommands = widget.config.getCustomKeyCommands();
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
-              )
-                  .then((_) {
-                setState(() {
-                  _keyCommands = widget.config.getCustomKeyCommands();
-                });
-              });
+              );
             },
             child: const Text('Add Keybind'),
           ),
