@@ -7,10 +7,10 @@ import 'animation/animation_editor.dart';
 import 'workspace/workspace_editor.dart';
 import 'ffi/miracle_config.dart';
 
+final String miracleConfigPath = "/home/matthew/.config/miracle-wm.yaml";
+
 void main() {
-  final config = MiracleConfig.loadFromPath(
-    "/home/matthew/.config/miracle-wm.yaml",
-  );
+  final config = MiracleConfig.loadFromPath(miracleConfigPath);
   runApp(SettingsApp(config: config!));
 }
 
@@ -114,7 +114,26 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
-          onPressed: () {},
+          onPressed: () {
+            final result = widget.config.saveToPath(miracleConfigPath);
+            if (result.success) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  content: Text('Saved the configuration'),
+                  duration: Duration(seconds: 3), // Show for 3 seconds
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  content: Text('Failed to save the configuration'),
+                  duration: Duration(seconds: 3), // Show for 3 seconds
+                ),
+              );
+            }
+          },
           tooltip: 'Save',
           child: const Icon(Icons.save),
         ));

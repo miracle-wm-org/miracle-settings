@@ -22,6 +22,30 @@ final _miracleConfigFree = _lib.lookupFunction<
     Void Function(Pointer<_MiracleConfigLoadResult>),
     void Function(Pointer<_MiracleConfigLoadResult>)>('miracle_config_free');
 
+final _miracleConfigSave = _lib.lookupFunction<
+    Pointer<_MiracleConfigSaveResult> Function(
+        Pointer<Utf8>, Pointer<_MiracleConfigData>),
+    Pointer<_MiracleConfigSaveResult> Function(
+        Pointer<Utf8>, Pointer<_MiracleConfigData>)>('miracle_config_save');
+
+final _miracleSaveGetErrorCount = _lib.lookupFunction<
+        Uint32 Function(Pointer<_MiracleConfigSaveResult>),
+        int Function(Pointer<_MiracleConfigSaveResult>)>(
+    'miracle_save_result_get_error_count');
+
+final _miracleSaveGetError = _lib.lookupFunction<
+    Pointer<_MiracleConfigError> Function(
+      Pointer<_MiracleConfigSaveResult>,
+      UintPtr,
+    ),
+    Pointer<_MiracleConfigError> Function(Pointer<_MiracleConfigSaveResult>,
+        int)>(' miracle_save_result_get_error');
+
+final _miracleSaveFree = _lib.lookupFunction<
+    Void Function(Pointer<_MiracleConfigSaveResult>),
+    void Function(
+        Pointer<_MiracleConfigSaveResult>)>('miracle_save_result_free');
+
 final _miracleConfigGetModifierOptionsCount =
     _lib.lookupFunction<Uint32 Function(), int Function()>(
   'miracle_config_get_modifier_options_count',
@@ -653,6 +677,54 @@ class MiracleConfigData {
 
   MiracleConfigData(this._ptr);
 
+  // Save the config to a file
+  MiracleConfigSaveResult saveToPath(String path) {
+    final pathPtr = path.toNativeUtf8();
+    final resultPtr = _miracleConfigSave(pathPtr, _ptr);
+    malloc.free(pathPtr);
+
+    if (resultPtr == nullptr) {
+      return MiracleConfigSaveResult(
+        success: false,
+        errors: [
+          MiracleConfigError(
+            line: 0,
+            column: 0,
+            level: MiracleConfigErrorLevel.error,
+            filename: '',
+            message: 'Result pointer is null. Failed to save config.',
+          )
+        ],
+      );
+    }
+
+    MiracleConfigSaveResult result = MiracleConfigSaveResult(
+      success: resultPtr.ref.success,
+      errors: [],
+    );
+
+    if (!resultPtr.ref.success) {
+      final errorCount = _miracleSaveGetErrorCount(resultPtr);
+      if (errorCount > 0) {
+        for (var i = 0; i < errorCount; i++) {
+          final errorPtr = _miracleSaveGetError(resultPtr, i);
+          result.errors.add(
+            MiracleConfigError(
+              line: errorPtr.ref.line,
+              column: errorPtr.ref.column,
+              level: MiracleConfigErrorLevel.values[errorPtr.ref.level],
+              filename: errorPtr.ref.filename.toDartString(),
+              message: errorPtr.ref.message.toDartString(),
+            ),
+          );
+        }
+      }
+    }
+
+    _miracleSaveFree(resultPtr);
+    return result;
+  }
+
   // Accessors
   int get primaryModifier => _miracleConfigGetPrimaryModifier(_ptr);
   set primaryModifier(int modifier) =>
@@ -1042,6 +1114,13 @@ base class _MiracleConfigLoadResult extends Struct {
   external Pointer<Void> _errors;
 }
 
+// Save result struct
+base class _MiracleConfigSaveResult extends Struct {
+  @Bool()
+  external bool success;
+  external Pointer<Void> ptr;
+}
+
 // Custom key command
 base class _MiracleCustomKeyCommand extends Struct {
   @Int32()
@@ -1188,6 +1267,13 @@ base class _MiracleDragAndDrop extends Struct {
 }
 
 // Wrapper classes
+class MiracleConfigSaveResult {
+  final bool success;
+  final List<MiracleConfigError> errors;
+
+  MiracleConfigSaveResult({required this.success, required this.errors});
+}
+
 class MiracleStartupApp {
   final String command;
   final bool restartOnDeath;
