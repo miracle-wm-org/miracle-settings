@@ -95,7 +95,7 @@ class _WorkspaceEditorState extends State<WorkspaceEditor> {
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.only(top: 8.0, bottom: 80.0),
               child: _workspaces.isEmpty
                   ? const Padding(
                       padding: EdgeInsets.all(16.0),
@@ -118,7 +118,9 @@ class _WorkspaceEditorState extends State<WorkspaceEditor> {
                                   horizontal: 16.0, vertical: 4.0),
                               child: ListTile(
                                 title: Text(ws.name ??
-                                    (ws.num >= 0 ? 'Workspace ${ws.num}' : 'Anonymous')),
+                                    (ws.num >= 0
+                                        ? 'Workspace ${ws.num}'
+                                        : 'Anonymous')),
                                 subtitle: ws.name != null
                                     ? (ws.num >= 0
                                         ? Text('Workspace ${ws.num}')

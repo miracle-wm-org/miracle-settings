@@ -73,7 +73,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: TextField(
+                                child: TextFormField(
                                   decoration: const InputDecoration(
                                     labelText: 'Inner Gaps X',
                                     border: OutlineInputBorder(),
@@ -87,14 +87,12 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                                       });
                                     }
                                   },
-                                  controller: TextEditingController(
-                                    text: config.innerGapsX.toString(),
-                                  ),
+                                  initialValue: config.innerGapsX.toString(),
                                 ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
-                                child: TextField(
+                                child: TextFormField(
                                   decoration: const InputDecoration(
                                     labelText: 'Inner Gaps Y',
                                     border: OutlineInputBorder(),
@@ -108,9 +106,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                                       });
                                     }
                                   },
-                                  controller: TextEditingController(
-                                    text: config.innerGapsY.toString(),
-                                  ),
+                                  initialValue: config.innerGapsY.toString(),
                                 ),
                               ),
                             ],
@@ -121,7 +117,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: TextField(
+                                child: TextFormField(
                                   decoration: const InputDecoration(
                                     labelText: 'Outer Gaps X',
                                     border: OutlineInputBorder(),
@@ -135,14 +131,12 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                                       });
                                     }
                                   },
-                                  controller: TextEditingController(
-                                    text: config.outerGapsX.toString(),
-                                  ),
+                                  initialValue: config.outerGapsX.toString(),
                                 ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
-                                child: TextField(
+                                child: TextFormField(
                                   decoration: const InputDecoration(
                                     labelText: 'Outer Gaps Y',
                                     border: OutlineInputBorder(),
@@ -156,9 +150,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                                       });
                                     }
                                   },
-                                  controller: TextEditingController(
-                                    text: config.outerGapsY.toString(),
-                                  ),
+                                  initialValue: config.outerGapsY.toString(),
                                 ),
                               ),
                             ],
@@ -166,7 +158,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: TextField(
+                          child: TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Resize Jump (px)',
                               border: OutlineInputBorder(),
@@ -182,9 +174,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                                 });
                               }
                             },
-                            controller: TextEditingController(
-                              text: config.resizeJump.toString(),
-                            ),
+                            initialValue: config.resizeJump.toString(),
                           ),
                         ),
                         Padding(

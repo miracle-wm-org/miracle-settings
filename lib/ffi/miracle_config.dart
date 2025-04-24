@@ -1,11 +1,10 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
+import 'package:miracle_wm_settings/shared/ffi_library.dart';
 
 // FFI bindings
-final _lib = DynamicLibrary.open(
-  '/home/matthew/miracle-wm/build/lib/libmiracle-wm-config.so',
-);
+final _lib = tryLoadLibrary('libmiracle-wm-config.so')!;
 
 // Initialize FFI bindings
 final _miracleConfigLoad = _lib.lookupFunction<
@@ -199,7 +198,7 @@ final _miracleConfigGetResizeJump = _lib.lookupFunction<
 final _miracleConfigSetResizeJump = _lib.lookupFunction<
     Void Function(Pointer<_MiracleConfigData>, Int32),
     void Function(
-        Pointer<_MiracleConfigData>, int)>('miracle_config_set_outer_gaps_y');
+        Pointer<_MiracleConfigData>, int)>('miracle_config_set_resize_jump');
 
 // Animations enabled
 final _miracleConfigGetAnimationsEnabled = _lib.lookupFunction<
@@ -513,7 +512,7 @@ class MiracleConfig {
       return null;
     }
 
-    return MiracleConfigData(_miracleConfigLoadResultGetData(resultPtr));
+    return MiracleConfigData(path, _miracleConfigLoadResultGetData(resultPtr));
   }
 
   static void free(Pointer<_MiracleConfigLoadResult> result) {
@@ -673,9 +672,10 @@ class MiracleConfig {
 
 // Extended ConfigData wrapper with all methods
 class MiracleConfigData {
+  final String path;
   final Pointer<_MiracleConfigData> _ptr;
 
-  MiracleConfigData(this._ptr);
+  MiracleConfigData(this.path, this._ptr);
 
   // Save the config to a file
   MiracleConfigSaveResult saveToPath(String path) {
@@ -1043,7 +1043,7 @@ class MiracleConfigData {
       configs.add(
         MiracleWorkspaceConfig(
           num: config.num,
-          containerType: config.container_type,
+          containerType: config.container_type > 0 ? config.container_type : 0,
           name: config.name.address == 0 ? null : config.name.toDartString(),
         ),
       );

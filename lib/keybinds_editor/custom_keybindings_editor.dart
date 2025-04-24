@@ -166,7 +166,6 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                                         command: e.value.command,
                                         onSave: (action, modifiers, actionKey,
                                             command, _) {
-                                          Navigator.of(context).pop();
                                           widget.config.editCustomKeyCommand(
                                             e.key,
                                             action,
@@ -234,6 +233,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
             },
             child: const Text('Add Keybind'),
           ),
+          const SizedBox(height: 80),
         ],
       ),
     );

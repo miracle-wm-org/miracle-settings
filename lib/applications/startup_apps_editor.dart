@@ -13,29 +13,25 @@ class StartupAppsEditor extends StatefulWidget {
 }
 
 class _StartupAppsEditorState extends State<StartupAppsEditor> {
-  late List<MiracleStartupApp> _apps;
-
   @override
   void initState() {
     super.initState();
-    _apps = widget.config.getStartupApps();
   }
 
   void _addApp() {
     setState(() {
-      _apps.add(MiracleStartupApp(
-        command: '',
+      widget.config.addStartupApp(
+        '',
         restartOnDeath: false,
         noStartupId: false,
         shouldHaltCompositorOnDeath: false,
         inSystemdScope: false,
-      ));
+      );
     });
   }
 
   void _removeApp(int index) {
     setState(() {
-      _apps.removeAt(index);
       widget.config.removeStartupApp(index);
     });
   }
@@ -53,6 +49,7 @@ class _StartupAppsEditorState extends State<StartupAppsEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final apps = widget.config.getStartupApps();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -80,9 +77,10 @@ class _StartupAppsEditorState extends State<StartupAppsEditor> {
         const Divider(height: 1),
         Expanded(
           child: ListView.builder(
-            itemCount: _apps.length,
+            padding: const EdgeInsets.only(bottom: 80.0),
+            itemCount: apps.length,
             itemBuilder: (context, index) {
-              final app = _apps[index];
+              final app = apps[index];
               return _StartupAppItem(
                 app: app,
                 onChanged: (newApp) => _updateApp(index, newApp),
