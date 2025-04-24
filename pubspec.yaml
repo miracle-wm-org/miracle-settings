@@ -12,6 +12,7 @@ dependencies:
   ffi: ^2.1.4
   process_run: ^0.12.0
   flutter_colorpicker: ^1.1.0
+  logging: ^1.3.0
 
 dev_dependencies:
   flutter_test:

@@ -1,11 +1,10 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
+import 'package:miracle_wm_settings/shared/ffi_library.dart';
 
 // FFI bindings
-final _lib = DynamicLibrary.open(
-  '/home/matthew/miracle-wm/build/lib/libmiracle-wm-config.so',
-);
+final _lib = tryLoadLibrary('libmiracle-wm-config.so')!;
 
 // Initialize FFI bindings
 final _miracleConfigLoad = _lib.lookupFunction<
@@ -21,6 +20,30 @@ final _miracleConfigLoadResultGetData = _lib.lookupFunction<
 final _miracleConfigFree = _lib.lookupFunction<
     Void Function(Pointer<_MiracleConfigLoadResult>),
     void Function(Pointer<_MiracleConfigLoadResult>)>('miracle_config_free');
+
+final _miracleConfigSave = _lib.lookupFunction<
+    Pointer<_MiracleConfigSaveResult> Function(
+        Pointer<Utf8>, Pointer<_MiracleConfigData>),
+    Pointer<_MiracleConfigSaveResult> Function(
+        Pointer<Utf8>, Pointer<_MiracleConfigData>)>('miracle_config_save');
+
+final _miracleSaveGetErrorCount = _lib.lookupFunction<
+        Uint32 Function(Pointer<_MiracleConfigSaveResult>),
+        int Function(Pointer<_MiracleConfigSaveResult>)>(
+    'miracle_save_result_get_error_count');
+
+final _miracleSaveGetError = _lib.lookupFunction<
+    Pointer<_MiracleConfigError> Function(
+      Pointer<_MiracleConfigSaveResult>,
+      UintPtr,
+    ),
+    Pointer<_MiracleConfigError> Function(Pointer<_MiracleConfigSaveResult>,
+        int)>(' miracle_save_result_get_error');
+
+final _miracleSaveFree = _lib.lookupFunction<
+    Void Function(Pointer<_MiracleConfigSaveResult>),
+    void Function(
+        Pointer<_MiracleConfigSaveResult>)>('miracle_save_result_free');
 
 final _miracleConfigGetModifierOptionsCount =
     _lib.lookupFunction<Uint32 Function(), int Function()>(
@@ -175,7 +198,7 @@ final _miracleConfigGetResizeJump = _lib.lookupFunction<
 final _miracleConfigSetResizeJump = _lib.lookupFunction<
     Void Function(Pointer<_MiracleConfigData>, Int32),
     void Function(
-        Pointer<_MiracleConfigData>, int)>('miracle_config_set_outer_gaps_y');
+        Pointer<_MiracleConfigData>, int)>('miracle_config_set_resize_jump');
 
 // Animations enabled
 final _miracleConfigGetAnimationsEnabled = _lib.lookupFunction<
@@ -489,7 +512,7 @@ class MiracleConfig {
       return null;
     }
 
-    return MiracleConfigData(_miracleConfigLoadResultGetData(resultPtr));
+    return MiracleConfigData(path, _miracleConfigLoadResultGetData(resultPtr));
   }
 
   static void free(Pointer<_MiracleConfigLoadResult> result) {
@@ -649,9 +672,58 @@ class MiracleConfig {
 
 // Extended ConfigData wrapper with all methods
 class MiracleConfigData {
+  final String path;
   final Pointer<_MiracleConfigData> _ptr;
 
-  MiracleConfigData(this._ptr);
+  MiracleConfigData(this.path, this._ptr);
+
+  // Save the config to a file
+  MiracleConfigSaveResult saveToPath(String path) {
+    final pathPtr = path.toNativeUtf8();
+    final resultPtr = _miracleConfigSave(pathPtr, _ptr);
+    malloc.free(pathPtr);
+
+    if (resultPtr == nullptr) {
+      return MiracleConfigSaveResult(
+        success: false,
+        errors: [
+          MiracleConfigError(
+            line: 0,
+            column: 0,
+            level: MiracleConfigErrorLevel.error,
+            filename: '',
+            message: 'Result pointer is null. Failed to save config.',
+          )
+        ],
+      );
+    }
+
+    MiracleConfigSaveResult result = MiracleConfigSaveResult(
+      success: resultPtr.ref.success,
+      errors: [],
+    );
+
+    if (!resultPtr.ref.success) {
+      final errorCount = _miracleSaveGetErrorCount(resultPtr);
+      if (errorCount > 0) {
+        for (var i = 0; i < errorCount; i++) {
+          final errorPtr = _miracleSaveGetError(resultPtr, i);
+          result.errors.add(
+            MiracleConfigError(
+              line: errorPtr.ref.line,
+              column: errorPtr.ref.column,
+              level: MiracleConfigErrorLevel.values[errorPtr.ref.level],
+              filename: errorPtr.ref.filename.toDartString(),
+              message: errorPtr.ref.message.toDartString(),
+            ),
+          );
+        }
+      }
+    }
+
+    _miracleSaveFree(resultPtr);
+    return result;
+  }
 
   // Accessors
   int get primaryModifier => _miracleConfigGetPrimaryModifier(_ptr);
@@ -971,7 +1043,7 @@ class MiracleConfigData {
       configs.add(
         MiracleWorkspaceConfig(
           num: config.num,
-          containerType: config.container_type,
+          containerType: config.container_type > 0 ? config.container_type : 0,
           name: config.name.address == 0 ? null : config.name.toDartString(),
         ),
       );
@@ -1040,6 +1112,13 @@ base class _MiracleConfigData extends Struct {
 base class _MiracleConfigLoadResult extends Struct {
   external _MiracleConfigData config;
   external Pointer<Void> _errors;
+}
+
+// Save result struct
+base class _MiracleConfigSaveResult extends Struct {
+  @Bool()
+  external bool success;
+  external Pointer<Void> ptr;
 }
 
 // Custom key command
@@ -1188,6 +1267,13 @@ base class _MiracleDragAndDrop extends Struct {
 }
 
 // Wrapper classes
+class MiracleConfigSaveResult {
+  final bool success;
+  final List<MiracleConfigError> errors;
+
+  MiracleConfigSaveResult({required this.success, required this.errors});
+}
+
 class MiracleStartupApp {
   final String command;
   final bool restartOnDeath;

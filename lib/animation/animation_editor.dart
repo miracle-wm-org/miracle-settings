@@ -35,7 +35,7 @@ class AnimationEditor extends StatelessWidget {
       Expanded(
           child: SingleChildScrollView(
               child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 80),
                   child: Column(children: [
                     ...definitions.asMap().entries.map((entry) {
                       final event = MiracleAnimatableEvent.values[entry.key];
@@ -75,6 +75,13 @@ class _AnimationDefinitionCardState extends State<_AnimationDefinitionCard> {
     widget.config.setAnimationDefinition(widget.event, newDef);
     setState(() {
       definition = newDef.copyWith();
+    });
+  }
+
+  void _resetDefinition() {
+    widget.config.resetAnimationDefinition(widget.event);
+    setState(() {
+      definition = widget.config.getAnimationDefinition(widget.event);
     });
   }
 
@@ -324,17 +331,33 @@ class _AnimationDefinitionCardState extends State<_AnimationDefinitionCard> {
                 ),
               ),
               actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _saveDefinition(editedDefinition);
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Save'),
-                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        _resetDefinition();
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Reset'),
+                    ),
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            _saveDefinition(editedDefinition);
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Save'),
+                        ),
+                      ],
+                    )
+                  ],
+                )
               ],
             );
           },
