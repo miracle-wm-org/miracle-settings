@@ -153,7 +153,6 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                             children: [
                               IconButton(
                                 icon: const Icon(Icons.edit_outlined, size: 20),
-                                color: Colors.black54,
                                 onPressed: () {
                                   showDialog(
                                     context: context,
@@ -188,7 +187,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                               IconButton(
                                 icon:
                                     const Icon(Icons.delete_outline, size: 20),
-                                color: Colors.red[400],
+                                color: Theme.of(context).colorScheme.error,
                                 onPressed: () {
                                   setState(() {
                                     widget.config.removeCustomKeyCommand(e.key);

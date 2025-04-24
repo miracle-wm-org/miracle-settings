@@ -23,10 +23,17 @@ class SettingsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Miracle WM Settings',
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purple,
+          brightness: Brightness.dark,
+        ),
+      ),
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
+          seedColor: Colors.purple,
           brightness: Brightness.light,
         ),
       ),
@@ -83,27 +90,33 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          NavigationRail(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-            labelType: NavigationRailLabelType.all,
-            destinations: destinations,
-          ),
-          const VerticalDivider(thickness: 1, width: 1),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: contentViews[_selectedIndex](widget),
+        body: Row(
+          children: [
+            NavigationRail(
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              labelType: NavigationRailLabelType.all,
+              destinations: destinations,
             ),
-          ),
-        ],
-      ),
-    );
+            const VerticalDivider(thickness: 1, width: 1),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: contentViews[_selectedIndex](widget),
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          onPressed: () {},
+          tooltip: 'Save',
+          child: const Icon(Icons.save),
+        ));
   }
 }
