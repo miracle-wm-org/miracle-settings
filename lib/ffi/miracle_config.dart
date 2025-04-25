@@ -7,6 +7,11 @@ import 'package:miracle_settings/shared/ffi_library.dart';
 final _lib = tryLoadLibrary('libmiracle-wm-config.so')!;
 
 // Initialize FFI bindings
+final _miracleGetConfigPath =
+    _lib.lookupFunction<Pointer<Utf8> Function(), Pointer<Utf8> Function()>(
+  'miracle_config_path',
+);
+
 final _miracleConfigLoad = _lib.lookupFunction<
     Pointer<_MiracleConfigLoadResult> Function(Pointer<Utf8>),
     Pointer<_MiracleConfigLoadResult> Function(
@@ -503,6 +508,11 @@ enum MiracleConfigErrorLevel { warning, error }
 
 // Main wrapper class
 class MiracleConfig {
+  static String get defaultConfigPath {
+    final pathPtr = _miracleGetConfigPath();
+    return pathPtr.toDartString();
+  }
+
   static MiracleConfigData? loadFromPath(String path) {
     final pathPtr = path.toNativeUtf8();
     final resultPtr = _miracleConfigLoad(pathPtr);
