@@ -953,10 +953,10 @@ class MiracleConfigData {
 
   Color ffiColorArrayToColor(Array<Float> focusColor) {
     return Color.fromARGB(
-        _doubleColorToInt(focusColor[3]),
         _doubleColorToInt(focusColor[0]),
-        _doubleColorToInt(focusColor[1]),
-        _doubleColorToInt(focusColor[2]));
+        _doubleColorToInt(focusColor[3]),
+        _doubleColorToInt(focusColor[2]),
+        _doubleColorToInt(focusColor[1]));
   }
 
   // Border config
