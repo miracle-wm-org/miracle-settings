@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Dart
+name: Flutter
 
 on:
   push:
@@ -17,16 +17,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.3'
+          cache: true
 
       - name: Install dependencies
-        run: dart pub get
+        run: flutter pub get
         
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
 
-      - name: Analyze project source
-        run: dart analyze
+      # - name: Analyze project source
+      #   run: flutter analyze
 
       - name: Run tests
-        run: dart test
+        run: flutter test

@@ -27,7 +27,7 @@ class _PrimaryModifierEditorState extends State<PrimaryModifierEditor> {
   @override
   Widget build(BuildContext context) {
     final options = MiracleConfig.getModifierOptions();
-    
+
     return DropdownButtonFormField<int>(
       value: _selectedModifier,
       decoration: const InputDecoration(
