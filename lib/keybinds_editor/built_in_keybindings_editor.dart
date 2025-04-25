@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:miracle_wm_settings/ffi/linux_input_event_codes.dart';
-import 'package:miracle_wm_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/ffi/linux_input_event_codes.dart';
+import 'package:miracle_settings/ffi/miracle_config.dart';
 import 'keybind_editor_screen.dart';
 
 class BuiltInKeybindingsEditor extends StatefulWidget {
@@ -194,8 +194,8 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                   child: KeybindEditorScreen(
                     label: "Add Built-in Keybinding",
                     isSelectingBuiltIn: true,
-                    action:
-                        MiracleConfig.getKeyboardActionsOptions().first.value,
+                    action: MiracleConfig.getKeyboardActionsOptions()[1]
+                        .value, // Corresponds to "Down"
                     modifiers: 0,
                     actionKey: 0,
                     builtInAction: 0,

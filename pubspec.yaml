@@ -1,4 +1,4 @@
-name: miracle_wm_settings
+name: miracle_settings
 description: "A settings application for miracle-wm, a tiling window manager for Wayland."
 publish_to: 'none'
 version: 0.0.1
@@ -13,6 +13,7 @@ dependencies:
   process_run: ^0.12.0
   flutter_colorpicker: ^1.1.0
   logging: ^1.3.0
+  toml: ^0.16.0
 
 dev_dependencies:
   flutter_test:

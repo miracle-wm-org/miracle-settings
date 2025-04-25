@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:miracle_wm_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/ffi/miracle_config.dart';
 import 'key_combination_selector.dart';
 
 class KeybindEditorScreen extends StatefulWidget {

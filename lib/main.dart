@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:miracle_wm_settings/applications/startup_apps_editor.dart';
-import 'package:miracle_wm_settings/border/border_editor.dart';
+import 'package:miracle_settings/applications/startup_apps_editor.dart';
+import 'package:miracle_settings/border/border_editor.dart';
+import 'package:miracle_settings/config.dart';
 import 'keybinds_editor/keybindings_editor.dart';
 import 'general/general_settings.dart';
 import 'animation/animation_editor.dart';
@@ -9,39 +10,6 @@ import 'workspace/workspace_editor.dart';
 import 'ffi/miracle_config.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
-
-String findOrCreateConfigFile(String relativePath) {
-  final env = Platform.environment;
-  final home = env['HOME'];
-  if (home == null) {
-    throw Exception("HOME environment variable is not set.");
-  }
-
-  final xdgConfigHome = env['XDG_CONFIG_HOME'] ?? p.join(home, '.config');
-  final fallbackConfigPath = p.join(xdgConfigHome, relativePath);
-
-  // Check if file exists in any XDG path
-  final pathsToCheck = <String>[
-    p.join(xdgConfigHome, relativePath),
-    if (xdgConfigHome != p.join(home, '.config'))
-      p.join(home, '.config', relativePath),
-    for (final dir in (env['XDG_CONFIG_DIRS'] ?? '/etc/xdg').split(':'))
-      p.join(dir, relativePath),
-  ];
-
-  for (final path in pathsToCheck) {
-    final file = File(path);
-    if (file.existsSync()) {
-      return file.path;
-    }
-  }
-
-  // If not found, create the file in $XDG_CONFIG_HOME or fallback
-  final fileToCreate = File(fallbackConfigPath);
-  fileToCreate.parent.createSync(recursive: true);
-  fileToCreate.createSync();
-  return fileToCreate.path;
-}
 
 final ThemeData lightDraculaTheme = ThemeData(
   useMaterial3: true,
@@ -115,14 +83,15 @@ final ThemeData darkDraculaTheme = ThemeData(
   ),
 );
 
-void main() {
+void main() async {
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
 
   final log = Logger('main');
-  final String miracleConfigPath = findOrCreateConfigFile('miracle-wm.yaml');
+  final parser = ConfigParser();
+  final miracleConfigPath = await parser.getConfigFilePath();
   log.info('Miracle WM config path: $miracleConfigPath');
   final config = MiracleConfig.loadFromPath(miracleConfigPath);
   if (config == null) {

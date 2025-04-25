@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
-import 'package:miracle_wm_settings/shared/ffi_library.dart';
+import 'package:miracle_settings/shared/ffi_library.dart';
 
 // FFI bindings
 final _lib = tryLoadLibrary('libmiracle-wm-config.so')!;

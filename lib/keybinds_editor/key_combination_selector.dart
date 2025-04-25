@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:miracle_wm_settings/ffi/linux_input_event_codes.dart';
-import 'package:miracle_wm_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/ffi/linux_input_event_codes.dart';
+import 'package:miracle_settings/ffi/miracle_config.dart';
 
 class KeyCombinationSelector extends StatefulWidget {
   final int initialModifiers;
