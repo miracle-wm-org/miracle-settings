@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:miracle_wm_settings/ffi/miracle_config.dart';
-import 'package:miracle_wm_settings/shared/helpers.dart';
+import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/shared/helpers.dart';
 
 class WorkspaceEditor extends StatefulWidget {
   const WorkspaceEditor({required this.config, super.key});

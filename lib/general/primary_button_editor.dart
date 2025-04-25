@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:miracle_wm_settings/ffi/miracle_config.dart';
-import 'package:miracle_wm_settings/keybinds_editor/custom_keybindings_editor.dart';
+import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/keybinds_editor/custom_keybindings_editor.dart';
 
 class PrimaryButtonEditor extends StatefulWidget {
   const PrimaryButtonEditor({

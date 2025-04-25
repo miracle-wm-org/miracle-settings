@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:miracle_wm_settings/ffi/linux_input_event_codes.dart';
-import 'package:miracle_wm_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/ffi/linux_input_event_codes.dart';
+import 'package:miracle_settings/ffi/miracle_config.dart';
 import 'keybind_editor_screen.dart';
 
 class CustomKeybindingsEditor extends StatefulWidget {
@@ -211,8 +211,8 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                   child: KeybindEditorScreen(
                     label: "Add Custom Keybinding",
                     isSelectingBuiltIn: false,
-                    action:
-                        MiracleConfig.getKeyboardActionsOptions().first.value,
+                    action: MiracleConfig.getKeyboardActionsOptions()[1]
+                        .value, // Corresponds to "Down"
                     modifiers: 0,
                     actionKey: 0,
                     command: '',

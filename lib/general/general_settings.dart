@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'drag_and_drop_editor.dart';
-import 'package:miracle_wm_settings/ffi/miracle_config.dart';
-import 'package:miracle_wm_settings/general/primary_modifier_editor.dart';
-import 'package:miracle_wm_settings/general/primary_button_editor.dart';
-import 'package:miracle_wm_settings/shared/shell_command_input.dart';
+import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/general/primary_modifier_editor.dart';
+import 'package:miracle_settings/general/primary_button_editor.dart';
+import 'package:miracle_settings/shared/shell_command_input.dart';
 
 class GeneralSettings extends StatefulWidget {
   const GeneralSettings({required this.config, super.key});
