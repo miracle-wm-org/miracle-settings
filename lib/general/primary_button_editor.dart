@@ -28,7 +28,7 @@ class _PrimaryButtonEditorState extends State<PrimaryButtonEditor> {
   @override
   Widget build(BuildContext context) {
     final options = MiracleConfig.getButtonsOptions();
-    
+
     return DropdownButtonFormField<int>(
       value: _selectedButton,
       decoration: const InputDecoration(
