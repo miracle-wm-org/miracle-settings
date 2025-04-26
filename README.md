@@ -17,12 +17,13 @@ flutter build linux --release
 or
 
 ```sh
+export FLUTTER = path/to/flutter
 make build
 ```
 
 ## Installing
 ```sh
-sudo make isntall
+sudo make install
 ```
 
 ## Configuring
