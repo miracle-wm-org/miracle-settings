@@ -35,5 +35,5 @@ to see where it may end up for you.
 Valid keys in this file are:
 
 ```toml
-config_file_path = "path/to/your/miracle-wm.yaml" (defaults to $HOME/.config/miracle-wm.yaml, or wherever XDG Base Directory Specification says to look)
+config_file_path = "path/to/your/miracle-wm.yaml" # defaults to $HOME/.config/miracle-wm/config.yaml
 ```
