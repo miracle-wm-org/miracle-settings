@@ -5,10 +5,13 @@ A graphical frontend for configuring [miracle-wm](https://github.com/miracle-wm-
 ![The general settings page of miracle settings](image.png "Miracle Configuration Editor")
 
 ## Dependencies
-- `libmiracle-wm-config.so.1`
+- `libmiracle-wm-config.so.1` (installed with `miracle-wm >= 0.6.0`)
 
 ## Building
+Requires:
+- `flutter >= 3.24.0`
 
+Then run:
 ```sh
 flutter pub get get
 flutter build linux --release
