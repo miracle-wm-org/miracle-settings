@@ -13,6 +13,7 @@ class BorderEditor extends StatefulWidget {
 
 class _BorderEditorState extends State<BorderEditor> {
   late int _borderSize;
+  late double _borderRadius;
   late Color _borderColor;
   late Color _focusedBorderColor;
 
@@ -21,6 +22,7 @@ class _BorderEditorState extends State<BorderEditor> {
     super.initState();
     final borderConfig = widget.config.getBorderConfig();
     _borderSize = borderConfig.size;
+    _borderRadius = borderConfig.radius;
     _borderColor = borderConfig.color;
     _focusedBorderColor = borderConfig.focusColor;
   }
@@ -57,6 +59,7 @@ class _BorderEditorState extends State<BorderEditor> {
               onPressed: () {
                 widget.config.setBorderConfig(MiracleBorderConfig(
                   size: _borderSize,
+                  radius: _borderRadius,
                   color: _borderColor,
                   focusColor: _focusedBorderColor,
                 ));
@@ -113,6 +116,31 @@ class _BorderEditorState extends State<BorderEditor> {
                     });
                     widget.config.setBorderConfig(MiracleBorderConfig(
                       size: _borderSize,
+                      radius: _borderRadius,
+                      color: _borderColor,
+                      focusColor: _focusedBorderColor,
+                    ));
+                  },
+                ),
+                const SizedBox(width: 16),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Border Radius'),
+                ),
+                const SizedBox(height: 8),
+                Slider(
+                  value: _borderRadius.toDouble(),
+                  min: 0,
+                  max: 20,
+                  divisions: 40,
+                  label: '$_borderRadius px',
+                  onChanged: (value) {
+                    setState(() {
+                      _borderRadius = value.toDouble();
+                    });
+                    widget.config.setBorderConfig(MiracleBorderConfig(
+                      size: _borderSize,
+                      radius: _borderRadius,
                       color: _borderColor,
                       focusColor: _focusedBorderColor,
                     ));

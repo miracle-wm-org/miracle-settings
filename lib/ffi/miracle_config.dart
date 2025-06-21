@@ -388,12 +388,14 @@ final _miracleConfigSetBorderConfig = _lib.lookupFunction<
     Void Function(
       Pointer<_MiracleConfigData>,
       Int32,
+      Float,
       Pointer<Float>,
       Pointer<Float>,
     ),
     void Function(
       Pointer<_MiracleConfigData>,
       int,
+      double,
       Pointer<Float>,
       Pointer<Float>,
     )>('miracle_config_set_border_config');
@@ -974,6 +976,7 @@ class MiracleConfigData {
     final config = _miracleConfigGetBorderConfig(_ptr);
     return MiracleBorderConfig(
       size: config.size,
+      radius: config.radius,
       focusColor: ffiColorArrayToColor(config.focus_color),
       color: ffiColorArrayToColor(config.color),
     );
@@ -992,7 +995,8 @@ class MiracleConfigData {
     color[2] = config.color.g.toDouble();
     color[3] = config.color.r.toDouble();
 
-    _miracleConfigSetBorderConfig(_ptr, config.size, focusColor, color);
+    _miracleConfigSetBorderConfig(
+        _ptr, config.size, config.radius, focusColor, color);
     calloc.free(focusColor);
     calloc.free(color);
   }
@@ -1184,11 +1188,13 @@ class MiracleCustomKeyCommand {
 
 class MiracleBorderConfig {
   final int size;
+  final double radius;
   final Color focusColor; // RGBA
   final Color color; // RGBA
 
   MiracleBorderConfig({
     required this.size,
+    required this.radius,
     required this.focusColor,
     required this.color,
   });
@@ -1230,6 +1236,8 @@ base class _MiracleKeyCommand extends Struct {
 base class _MiracleBorderConfig extends Struct {
   @Int32()
   external int size;
+  @Float()
+  external double radius;
   @Array(4)
   external Array<Float> focus_color;
   @Array(4)
