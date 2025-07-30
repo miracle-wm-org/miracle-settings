@@ -11,75 +11,101 @@ import 'ffi/miracle_config.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 
-final ThemeData lightDraculaTheme = ThemeData(
-  useMaterial3: true,
+const draculaBackground = Color(0xFF282A36);
+const draculaCurrentLine = Color(0xFF44475A);
+const draculaForeground = Color(0xFFF8F8F2);
+const draculaComment = Color(0xFF6272A4);
+const draculaCyan = Color(0xFF8BE9FD);
+const draculaGreen = Color(0xFF50FA7B);
+const draculaOrange = Color(0xFFFFB86C);
+const draculaPink = Color(0xFFFF79C6);
+const draculaPurple = Color(0xFFBD93F9);
+const draculaRed = Color(0xFFFF5555);
+const draculaYellow = Color(0xFFF1FA8C);
+
+final ThemeData draculaLightTheme = ThemeData(
   brightness: Brightness.light,
-  scaffoldBackgroundColor: Color(0xFFF8F8F2),
-  primaryColor: Color(0xFFBD93F9),
-  canvasColor: Color(0xFFE6E6E6),
-  cardColor: Color(0xFFE6E6E6),
-  dividerColor: Color(0xFF6272A4),
-  hintColor: Color(0xFF6272A4),
-  appBarTheme: AppBarTheme(
-    backgroundColor: Color(0xFFE6E6E6),
-    iconTheme: IconThemeData(color: Color(0xFF282A36)),
-    titleTextStyle: TextStyle(color: Color(0xFF282A36), fontSize: 20),
+  scaffoldBackgroundColor: Colors.white,
+  primaryColor: draculaPurple,
+  colorScheme: ColorScheme.light(
+    primary: draculaPurple,
+    secondary: draculaCyan,
+    surface: Colors.grey.shade100,
+    background: Colors.white,
+    error: draculaRed,
+    onPrimary: Colors.white,
+    onSecondary: Colors.black,
+    onSurface: Colors.black,
+    onBackground: Colors.black,
+    onError: Colors.white,
   ),
-  textTheme: TextTheme(
-    bodyLarge: TextStyle(color: Color(0xFF282A36)),
-    bodyMedium: TextStyle(color: Color(0xFF282A36)),
-    labelLarge: TextStyle(color: Color(0xFF6272A4)),
+  textTheme: const TextTheme(
+    bodyLarge: TextStyle(color: Colors.black),
+    bodyMedium: TextStyle(color: Colors.black87),
+    bodySmall: TextStyle(color: draculaComment),
+  ),
+  appBarTheme: AppBarTheme(
+    backgroundColor: Colors.grey.shade100,
+    foregroundColor: Colors.black,
+    elevation: 1,
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      backgroundColor: Color(0xFFBD93F9),
-      foregroundColor: Color(0xFFF8F8F2),
+      backgroundColor: draculaPurple,
+      foregroundColor: Colors.white,
     ),
   ),
-  colorScheme: ColorScheme.light(
-    primary: Color(0xFFBD93F9),
-    secondary: Color(0xFF8BE9FD),
-    error: Color(0xFFFF5555),
-    background: Color(0xFFF8F8F2),
-    surface: Color(0xFFE6E6E6),
-    onPrimary: Color(0xFFF8F8F2),
-    onSecondary: Color(0xFF282A36),
-    onError: Color(0xFFF8F8F2),
-    onBackground: Color(0xFF282A36),
-    onSurface: Color(0xFF282A36),
+  inputDecorationTheme: const InputDecorationTheme(
+    filled: true,
+    fillColor: Color(0xFFF0F0F0),
+    border: OutlineInputBorder(),
+    hintStyle: TextStyle(color: draculaComment),
   ),
 );
 
-final ThemeData darkDraculaTheme = ThemeData(
-  useMaterial3: true,
+final ThemeData draculaDarkTheme = ThemeData(
   brightness: Brightness.dark,
-  scaffoldBackgroundColor: Color(0xFF282A36),
-  primaryColor: Color(0xFFBD93F9), // Purple
-  hintColor: Color(0xFF6272A4), // Comment
-  canvasColor: Color(0xFF282A36),
-  cardColor: Color(0xFF44475A),
-  dividerColor: Color(0xFF6272A4),
-  textTheme: TextTheme(
-    bodyLarge: TextStyle(color: Color(0xFFF8F8F2)), // Foreground
-    bodyMedium: TextStyle(color: Color(0xFFF8F8F2)),
-    labelLarge: TextStyle(color: Color(0xFFF1FA8C)), // Yellow
-  ),
-  appBarTheme: AppBarTheme(
-    backgroundColor: Color(0xFF44475A),
-    iconTheme: IconThemeData(color: Color(0xFFF8F8F2)),
-    titleTextStyle: TextStyle(color: Color(0xFFF8F8F2), fontSize: 20),
-  ),
+  scaffoldBackgroundColor: draculaBackground,
+  primaryColor: draculaPurple,
   colorScheme: ColorScheme.dark(
-    primary: Color(0xFFBD93F9),
-    secondary: Color(0xFF8BE9FD), // Cyan
-    error: Color(0xFFFF5555), // Red
-    background: Color(0xFF282A36),
-    surface: Color(0xFF44475A),
-    onPrimary: Color(0xFF282A36),
-    onSecondary: Color(0xFF282A36),
-    onError: Color(0xFFF8F8F2),
-    onBackground: Color(0xFFF8F8F2),
-    onSurface: Color(0xFFF8F8F2),
+    primary: draculaPurple,
+    secondary: draculaCyan,
+    surface: draculaCurrentLine,
+    background: draculaBackground,
+    error: draculaRed,
+    onPrimary: draculaBackground,
+    onSecondary: draculaBackground,
+    onSurface: draculaForeground,
+    onBackground: draculaForeground,
+    onError: draculaBackground,
+  ),
+  textTheme: const TextTheme(
+    headlineLarge: TextStyle(
+        color: draculaForeground, fontSize: 20, fontWeight: FontWeight.bold),
+    headlineMedium: TextStyle(
+        color: draculaForeground, fontSize: 18, fontWeight: FontWeight.bold),
+    headlineSmall: TextStyle(
+        color: draculaForeground, fontSize: 16, fontWeight: FontWeight.bold),
+    bodyLarge: TextStyle(color: draculaForeground),
+    bodyMedium: TextStyle(color: draculaForeground),
+    bodySmall: TextStyle(color: draculaComment),
+  ),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: draculaCurrentLine,
+    foregroundColor: draculaForeground,
+    elevation: 0,
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: draculaGreen,
+      foregroundColor: draculaBackground,
+    ),
+  ),
+  inputDecorationTheme: const InputDecorationTheme(
+    filled: true,
+    fillColor: draculaCurrentLine,
+    border: OutlineInputBorder(),
+    hintStyle: TextStyle(color: draculaComment),
   ),
 );
 
@@ -111,8 +137,8 @@ class SettingsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Miracle WM Settings',
-      darkTheme: darkDraculaTheme,
-      theme: lightDraculaTheme,
+      darkTheme: draculaDarkTheme,
+      theme: draculaLightTheme,
       home: SettingsHomePage(config: config),
     );
   }

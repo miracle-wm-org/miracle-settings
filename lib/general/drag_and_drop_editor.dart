@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_settings/ffi/miracle_config.dart';
-import 'package:miracle_settings/general/primary_modifier_editor.dart';
+import 'package:miracle_settings/widgets/section.dart';
+import 'package:miracle_settings/widgets/modifiers_selector.dart';
 
 class DragAndDropEditor extends StatefulWidget {
   const DragAndDropEditor({
@@ -35,70 +36,47 @@ class _DragAndDropEditorState extends State<DragAndDropEditor> {
 
   @override
   Widget build(BuildContext context) {
-    final modifierOptions = MiracleConfig.getModifierOptions();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
+    return Section(
+      title: 'Drag and Drop',
+      icon: Icons.drag_handle_sharp,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              const Icon(Icons.drag_handle, size: 28),
-              const SizedBox(width: 12),
-              Text(
-                'Drag and Drop',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+              Checkbox(
+                value: _enabled,
+                onChanged: (value) {
+                  setState(() {
+                    _enabled = value ?? false;
+                    _updateConfig();
+                  });
+                },
               ),
+              const SizedBox(width: 8),
+              const Text('Enable Drag and Drop'),
             ],
           ),
-        ),
-        Row(
-          children: [
-            Checkbox(
-              value: _enabled,
-              onChanged: (value) {
+          if (_enabled) ...[
+            const SizedBox(height: 16),
+            Text(
+              'Modifier Keys',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            const SizedBox(height: 8),
+            ModifiersSelector(
+              modifiers: _modifiers,
+              onModifiersChanged: (int newModifiers) {
                 setState(() {
-                  _enabled = value ?? false;
+                  _modifiers = newModifiers;
                   _updateConfig();
                 });
               },
             ),
-            const SizedBox(width: 8),
-            const Text('Enable Drag and Drop'),
-          ],
-        ),
-        if (_enabled) ...[
-          const SizedBox(height: 16),
-          Text(
-            'Modifier Keys',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: modifierOptions.map((option) {
-              final isSelected = (_modifiers & option.value) == option.value;
-              return FilterChip(
-                label: Text(option.name),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _modifiers |= option.value;
-                    } else {
-                      _modifiers &= ~option.value;
-                    }
-                    _updateConfig();
-                  });
-                },
-              );
-            }).toList(),
-          ),
+          ]
         ],
-      ],
+      ),
     );
   }
 }

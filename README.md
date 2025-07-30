@@ -13,7 +13,7 @@ Requires:
 
 Then run:
 ```sh
-flutter pub get get
+flutter pub get
 flutter build linux --release
 ```
 
