@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_settings/ffi/linux_input_event_codes.dart';
 import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/widgets/section.dart';
 import 'keybind_editor_screen.dart';
 
 class CustomKeybindingsEditor extends StatefulWidget {
@@ -34,37 +35,19 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
     return '${modNames.join(' + ')}${modNames.isNotEmpty ? ' + ' : ''}${keyToString(cmd.key)}';
   }
 
-  String _getKeyState(MiracleCustomKeyCommand cmd) {
-    for (final opt in MiracleConfig.getKeyboardActionsOptions()) {
-      if (cmd.action == opt.value) {
-        return opt.name;
-      }
-    }
-
-    return 'Unknown';
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Custom Keybindings',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 16),
+    return Section(
+        title: 'Custom Keybindings',
+        icon: Icons.keyboard_command_key,
+        child: Column(children: [
           if (_keyCommands.isEmpty)
             const Text('No custom keybindings configured'),
           if (_keyCommands.isNotEmpty)
             Table(
               columnWidths: const {
-                0: FlexColumnWidth(3),
-                1: FlexColumnWidth(2),
+                0: FlexColumnWidth(1),
+                1: FlexColumnWidth(3),
                 2: FlexColumnWidth(1),
               },
               border: TableBorder(
@@ -85,19 +68,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                         horizontal: 16,
                       ),
                       child: Text(
-                        'Key Combination',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
-                      child: Text(
-                        'Key State',
+                        'Keybind',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -122,26 +93,11 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                       (e) => TableRow(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 16,
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.keyboard_alt_outlined,
-                                    size: 20),
-                                const SizedBox(width: 12),
-                                Text(_getKeyCombination(e.value)),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 16,
-                            ),
-                            child: Text(_getKeyState(e.value)),
-                          ),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 16,
+                              ),
+                              child: Text(_getKeyCombination(e.value))),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               vertical: 12,
@@ -150,6 +106,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
                             child: Text(e.value.command),
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               IconButton(
                                 icon: const Icon(Icons.edit_outlined, size: 20),
@@ -232,10 +189,7 @@ class _CustomKeybindingsEditorState extends State<CustomKeybindingsEditor> {
               );
             },
             child: const Text('Add Keybind'),
-          ),
-          const SizedBox(height: 80),
-        ],
-      ),
-    );
+          )
+        ]));
   }
 }

@@ -18,29 +18,12 @@ class _KeybindingsEditorState extends State<KeybindingsEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            children: [
-              const Icon(Icons.keyboard, size: 28),
-              const SizedBox(width: 12),
-              Text(
-                'Keybindings',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ],
-          ),
-        ),
-        const Divider(height: 1),
         Expanded(
           child: SingleChildScrollView(
             child: Column(
               children: [
                 BuiltInKeybindingsEditor(config: widget.config),
                 CustomKeybindingsEditor(config: widget.config),
-                // We'll add more sections here later
               ],
             ),
           ),

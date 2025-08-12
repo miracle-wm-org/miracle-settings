@@ -7,6 +7,7 @@ class ShellCommandInput extends StatefulWidget {
     required this.onChanged,
     required this.labelText,
     required this.helperText,
+    this.errorText,
     super.key,
   });
 
@@ -14,6 +15,7 @@ class ShellCommandInput extends StatefulWidget {
   final ValueChanged<String?> onChanged;
   final String labelText;
   final String helperText;
+  final String? errorText;
 
   @override
   State<ShellCommandInput> createState() => _ShellCommandInputState();
@@ -72,6 +74,7 @@ class _ShellCommandInputState extends State<ShellCommandInput> {
         labelText: widget.labelText,
         border: const OutlineInputBorder(),
         hintText: widget.helperText,
+        errorText: widget.errorText,
         suffixIcon: Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: _isTesting

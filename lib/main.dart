@@ -86,9 +86,9 @@ final ThemeData draculaDarkTheme = ThemeData(
         color: draculaForeground, fontSize: 18, fontWeight: FontWeight.bold),
     headlineSmall: TextStyle(
         color: draculaForeground, fontSize: 16, fontWeight: FontWeight.bold),
-    bodyLarge: TextStyle(color: draculaForeground),
-    bodyMedium: TextStyle(color: draculaForeground),
-    bodySmall: TextStyle(color: draculaComment),
+    bodyLarge: TextStyle(color: draculaForeground, fontSize: 14),
+    bodyMedium: TextStyle(color: draculaForeground, fontSize: 14),
+    bodySmall: TextStyle(color: draculaComment, fontSize: 14),
   ),
   appBarTheme: const AppBarTheme(
     backgroundColor: draculaCurrentLine,

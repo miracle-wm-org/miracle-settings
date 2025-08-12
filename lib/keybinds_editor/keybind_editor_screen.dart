@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/shared/shell_command_input.dart';
 import 'key_combination_selector.dart';
 
 class KeybindEditorScreen extends StatefulWidget {
@@ -36,6 +37,9 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
   late final TextEditingController _commandController;
   late int _selectedBuiltInAction;
 
+  String? commandErrorText;
+  String? keyErrorText;
+
   @override
   void initState() {
     super.initState();
@@ -56,14 +60,22 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
 
   void _saveKeybind() {
     if (!widget.isSelectingBuiltIn && _commandController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a command')),
-      );
+      setState(() {
+        commandErrorText = 'Command cannot be empty';
+      });
+      return;
+    }
+
+    if (_selectedKey == 0) {
+      setState(() {
+        keyErrorText = 'Key cannot be empty';
+      });
       return;
     }
 
     widget.onSave(_selectedAction, _selectedModifiers, _selectedKey,
         _commandController.text, _selectedBuiltInAction);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -75,21 +87,6 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            KeyCombinationSelector(
-              initialModifiers: _selectedModifiers,
-              initialKey: _selectedKey,
-              onModifiersChanged: (modifiers) {
-                setState(() {
-                  _selectedModifiers = modifiers;
-                });
-              },
-              onKeyChanged: (key) {
-                setState(() {
-                  _selectedKey = key;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
             if (widget.isSelectingBuiltIn)
               DropdownButtonFormField<int>(
                 value: _selectedBuiltInAction,
@@ -113,15 +110,36 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
                 ),
               ),
             if (!widget.isSelectingBuiltIn)
-              TextField(
-                controller: _commandController,
-                decoration: const InputDecoration(
+              ShellCommandInput(
+                  current: _commandController.text,
+                  onChanged: (String? change) {
+                    _commandController.text = change ?? '';
+                    if (commandErrorText != null) {
+                      setState(() {
+                        commandErrorText = null;
+                      });
+                    }
+                  },
                   labelText: 'Command',
-                  hintText: 'Enter the command to execute',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            const SizedBox(height: 20),
+                  helperText: 'Enter the command to execute',
+                  errorText: commandErrorText),
+            const SizedBox(height: 16),
+            KeyCombinationSelector(
+              initialModifiers: _selectedModifiers,
+              initialKey: _selectedKey,
+              errorText: keyErrorText,
+              onModifiersChanged: (modifiers) {
+                setState(() {
+                  _selectedModifiers = modifiers;
+                });
+              },
+              onKeyChanged: (key) {
+                setState(() {
+                  _selectedKey = key;
+                  keyErrorText = null;
+                });
+              },
+            ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -134,7 +152,6 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
                 ElevatedButton(
                   onPressed: () {
                     _saveKeybind();
-                    Navigator.of(context).pop();
                   },
                   child: const Text('Save'),
                 ),

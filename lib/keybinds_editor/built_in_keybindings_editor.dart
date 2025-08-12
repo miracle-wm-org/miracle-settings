@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_settings/ffi/linux_input_event_codes.dart';
 import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/widgets/section.dart';
 import 'keybind_editor_screen.dart';
 
 class BuiltInKeybindingsEditor extends StatefulWidget {
@@ -46,25 +47,17 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Built-in Keybindings',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 16),
+    return Section(
+        title: 'Override Keybindings',
+        icon: Icons.key,
+        child: Column(children: [
           if (_keyCommands.isEmpty)
             const Text('No built-in keybindings configured'),
           if (_keyCommands.isNotEmpty)
             Table(
               columnWidths: const {
-                0: FlexColumnWidth(3),
-                1: FlexColumnWidth(2),
+                0: FlexColumnWidth(1),
+                1: FlexColumnWidth(3),
                 2: FlexColumnWidth(1),
               },
               border: TableBorder(
@@ -85,7 +78,7 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                         horizontal: 16,
                       ),
                       child: Text(
-                        'Key Combination',
+                        'Keybind',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -110,19 +103,11 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                       (e) => TableRow(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 16,
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.keyboard_alt_outlined,
-                                    size: 20),
-                                const SizedBox(width: 12),
-                                Text(_getKeyCombination(e.value)),
-                              ],
-                            ),
-                          ),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 16,
+                              ),
+                              child: Text(_getKeyCombination(e.value))),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               vertical: 12,
@@ -131,6 +116,7 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
                             child: Text(_getKeyAction(e.value)),
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               IconButton(
                                 icon: const Icon(Icons.edit_outlined, size: 20),
@@ -216,8 +202,6 @@ class _BuiltInKeybindingsEditorState extends State<BuiltInKeybindingsEditor> {
             },
             child: const Text('Add Keybind'),
           ),
-        ],
-      ),
-    );
+        ]));
   }
 }
