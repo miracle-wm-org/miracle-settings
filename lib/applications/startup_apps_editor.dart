@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:miracle_settings/widgets/section.dart';
 import '../ffi/miracle_config.dart';
 import '../shared/shell_command_input.dart';
 
@@ -50,47 +51,102 @@ class _StartupAppsEditorState extends State<StartupAppsEditor> {
   @override
   Widget build(BuildContext context) {
     final apps = widget.config.getStartupApps();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    List<TableRow> children = <TableRow>[];
+    for (var i = 0; i < apps.length; i++) {
+      children.add(TableRow(children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            children: [
-              const Icon(Icons.apps, size: 28),
-              const SizedBox(width: 12),
-              Text(
-                'Startup Applications',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: _addApp,
-                tooltip: 'Add Startup App',
-              ),
-            ],
+            padding: const EdgeInsets.symmetric(
+              vertical: 12,
+              horizontal: 16,
+            ),
+            child: Text('${i + 1}')),
+        Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 12,
+              horizontal: 16,
+            ),
+            child: Text(apps[i].command)),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12,
+            horizontal: 16,
           ),
-        ),
-        const Divider(height: 1),
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 80.0),
-            itemCount: apps.length,
-            itemBuilder: (context, index) {
-              final app = apps[index];
-              return _StartupAppItem(
-                app: app,
-                onChanged: (newApp) => _updateApp(index, newApp),
-                onRemove: () => _removeApp(index),
-              );
+          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            IconButton(
+                onPressed: () => {},
+                icon: const Icon(Icons.edit_outlined, size: 20)),
+            IconButton(
+                color: Theme.of(context).colorScheme.error,
+                onPressed: () => {},
+                icon: const Icon(Icons.delete_outline, size: 20))
+          ]),
+        )
+      ]));
+    }
+
+    return Section(
+        title: 'Startup Applications',
+        icon: Icons.apps,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Table(
+            columnWidths: const {
+              0: FlexColumnWidth(1),
+              1: FlexColumnWidth(8),
+              2: FlexColumnWidth(2)
             },
-          ),
-        ),
-      ],
-    );
+            border: TableBorder(
+              horizontalInside: BorderSide(
+                color: Theme.of(context).dividerColor,
+                width: 1,
+              ),
+            ),
+            children: [
+              TableRow(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceVariant,
+                  ),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
+                      child: Text(
+                        '#',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
+                      child: Text(
+                        'Command',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
+                      child: Text(
+                        '',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    )
+                  ]),
+              ...children
+            ],
+          )
+        ]));
   }
 }
 
