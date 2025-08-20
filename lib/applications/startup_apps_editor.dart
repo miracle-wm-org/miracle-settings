@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:miracle_settings/widgets/dialog_wrapper.dart';
+import 'package:miracle_settings/widgets/section.dart';
 import '../ffi/miracle_config.dart';
 import '../shared/shell_command_input.dart';
 
@@ -18,14 +19,14 @@ class _StartupAppsEditorState extends State<StartupAppsEditor> {
     super.initState();
   }
 
-  void _addApp() {
+  void _addApp(MiracleStartupApp app) {
     setState(() {
       widget.config.addStartupApp(
-        '',
-        restartOnDeath: false,
-        noStartupId: false,
-        shouldHaltCompositorOnDeath: false,
-        inSystemdScope: false,
+        app.command,
+        restartOnDeath: app.restartOnDeath,
+        noStartupId: app.noStartupId,
+        shouldHaltCompositorOnDeath: app.shouldHaltCompositorOnDeath,
+        inSystemdScope: app.inSystemdScope,
       );
     });
   }
@@ -37,79 +38,214 @@ class _StartupAppsEditorState extends State<StartupAppsEditor> {
   }
 
   void _updateApp(int index, MiracleStartupApp newApp) {
-    widget.config.updateStartupApp(
-      index,
-      newApp.command,
-      restartOnDeath: newApp.restartOnDeath,
-      noStartupId: newApp.noStartupId,
-      shouldHaltCompositorOnDeath: newApp.shouldHaltCompositorOnDeath,
-      inSystemdScope: newApp.inSystemdScope,
-    );
+    setState(() {
+      widget.config.updateStartupApp(
+        index,
+        newApp.command,
+        restartOnDeath: newApp.restartOnDeath,
+        noStartupId: newApp.noStartupId,
+        shouldHaltCompositorOnDeath: newApp.shouldHaltCompositorOnDeath,
+        inSystemdScope: newApp.inSystemdScope,
+      );
+    });
+  }
+
+  void swap(int firstIndex, int secondIndex) {
+    setState(() {
+      final first = widget.config.getStartupApps()[firstIndex];
+      final second = widget.config.getStartupApps()[secondIndex];
+
+      widget.config.updateStartupApp(
+        firstIndex,
+        second.command,
+        restartOnDeath: second.restartOnDeath,
+        noStartupId: second.noStartupId,
+        shouldHaltCompositorOnDeath: second.shouldHaltCompositorOnDeath,
+        inSystemdScope: second.inSystemdScope,
+      );
+
+      widget.config.updateStartupApp(
+        secondIndex,
+        first.command,
+        restartOnDeath: first.restartOnDeath,
+        noStartupId: first.noStartupId,
+        shouldHaltCompositorOnDeath: first.shouldHaltCompositorOnDeath,
+        inSystemdScope: first.inSystemdScope,
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final apps = widget.config.getStartupApps();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    List<TableRow> children = <TableRow>[];
+    for (var i = 0; i < apps.length; i++) {
+      children.add(TableRow(children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            children: [
-              const Icon(Icons.apps, size: 28),
-              const SizedBox(width: 12),
-              Text(
-                'Startup Applications',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+            padding: const EdgeInsets.symmetric(
+              vertical: 12,
+              horizontal: 16,
+            ),
+            child: Text('${i + 1}')),
+        Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 12,
+              horizontal: 16,
+            ),
+            child: Text(apps[i].command)),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12,
+            horizontal: 16,
+          ),
+          child: Wrap(spacing: 8, alignment: WrapAlignment.end, children: [
+            IconButton(
+                onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        child: _StartupAppEditor(
+                          app: apps[i],
+                          onChanged: (newApp) {
+                            _updateApp(i, newApp);
+                          },
+                        ),
+                      ),
                     ),
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: _addApp,
-                tooltip: 'Add Startup App',
-              ),
-            ],
-          ),
-        ),
-        const Divider(height: 1),
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.only(bottom: 80.0),
-            itemCount: apps.length,
-            itemBuilder: (context, index) {
-              final app = apps[index];
-              return _StartupAppItem(
-                app: app,
-                onChanged: (newApp) => _updateApp(index, newApp),
-                onRemove: () => _removeApp(index),
-              );
-            },
-          ),
-        ),
-      ],
-    );
+                icon: const Icon(Icons.edit_outlined, size: 20)),
+            IconButton(
+                color: Theme.of(context).colorScheme.error,
+                onPressed: () => _removeApp(i),
+                icon: const Icon(Icons.delete_outline, size: 20)),
+            IconButton(
+                onPressed: () => i != 0 ? swap(i, i - 1) : (),
+                icon: const Icon(Icons.arrow_upward_outlined, size: 20)),
+            IconButton(
+                onPressed: () => i != apps.length - 1 ? swap(i, i + 1) : (),
+                icon: const Icon(Icons.arrow_downward_outlined, size: 20))
+          ]),
+        )
+      ]));
+    }
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Expanded(
+          child: SingleChildScrollView(
+              child: Section(
+                  title: 'Startup Applications',
+                  icon: Icons.apps,
+                  child: Column(children: [
+                    Table(
+                      columnWidths: const {
+                        0: FlexColumnWidth(1),
+                        1: FlexColumnWidth(8),
+                        2: FlexColumnWidth(3)
+                      },
+                      border: TableBorder(
+                        horizontalInside: BorderSide(
+                          color: Theme.of(context).dividerColor,
+                          width: 1,
+                        ),
+                      ),
+                      children: [
+                        TableRow(
+                            decoration: BoxDecoration(
+                              color:
+                                  Theme.of(context).colorScheme.surfaceVariant,
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 16,
+                                ),
+                                child: Text(
+                                  '#',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 16,
+                                ),
+                                child: Text(
+                                  'Command',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 16,
+                                ),
+                                child: Text(
+                                  '',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              )
+                            ]),
+                        ...children
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            child: _StartupAppEditor(
+                              title: "New Startup Application",
+                              app: MiracleStartupApp(
+                                command: '',
+                                restartOnDeath: false,
+                                noStartupId: false,
+                                shouldHaltCompositorOnDeath: false,
+                                inSystemdScope: false,
+                              ),
+                              onChanged: (app) => setState(() {
+                                _addApp(app);
+                              }),
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('Add Application'),
+                    ),
+                  ]))))
+    ]);
   }
 }
 
-class _StartupAppItem extends StatefulWidget {
-  const _StartupAppItem({
-    required this.app,
-    required this.onChanged,
-    required this.onRemove,
-  });
+class _StartupAppEditor extends StatefulWidget {
+  const _StartupAppEditor(
+      {required this.app,
+      required this.onChanged,
+      this.title = 'Edit Startup Application'});
 
   final MiracleStartupApp app;
   final ValueChanged<MiracleStartupApp> onChanged;
-  final VoidCallback onRemove;
+  final String title;
 
   @override
-  State<_StartupAppItem> createState() => _StartupAppItemState();
+  State<_StartupAppEditor> createState() => _StartupAppEditorState();
 }
 
-class _StartupAppItemState extends State<_StartupAppItem> {
+class _StartupAppEditorState extends State<_StartupAppEditor> {
   late String _command;
   late bool _restartOnDeath;
   late bool _noStartupId;
@@ -134,14 +270,13 @@ class _StartupAppItemState extends State<_StartupAppItem> {
       shouldHaltCompositorOnDeath: _haltCompositor,
       inSystemdScope: _systemdScope,
     ));
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+    return DialogWrapper(
+        title: widget.title,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -151,94 +286,111 @@ class _StartupAppItemState extends State<_StartupAppItem> {
               current: _command,
               onChanged: (String? text) => setState(() {
                 _command = text ?? '';
-                _updateApp();
               }),
             ),
             const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 4,
+            SwitchListTile(
+              title: Text(
+                'Restart on death',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              subtitle: Text(
+                'Restart the application if it dies unexpectedly (exit code != 0)',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(fontWeight: FontWeight.normal),
+              ),
+              value: _restartOnDeath,
+              onChanged: (value) {
+                setState(() {
+                  _restartOnDeath = value;
+                });
+              },
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+            ),
+            SwitchListTile(
+              title: Text(
+                'No Startup ID',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              subtitle: Text(
+                'When true, miracle will pass an XDG activation startup token to the application',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(fontWeight: FontWeight.normal),
+              ),
+              value: _noStartupId,
+              onChanged: (value) {
+                setState(() {
+                  _noStartupId = value;
+                });
+              },
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+            ),
+            SwitchListTile(
+              title: Text(
+                'Halt Compositor',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              subtitle: Text(
+                'Halt the compositor if the application dies unexpectedly (exit code != 0)',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(fontWeight: FontWeight.normal),
+              ),
+              value: _haltCompositor,
+              onChanged: (value) {
+                setState(() {
+                  _haltCompositor = value;
+                });
+              },
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+            ),
+            SwitchListTile(
+              title: Text(
+                'Systemd Scope',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              subtitle: Text(
+                'If true, the application will be run in a systemd scope if available',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(fontWeight: FontWeight.normal),
+              ),
+              value: _systemdScope,
+              onChanged: (value) {
+                setState(() {
+                  _systemdScope = value;
+                });
+              },
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                SizedBox(
-                  width: 200,
-                  child: SwitchListTile(
-                    title: const Text('Restart if dies',
-                        style: TextStyle(fontSize: 12)),
-                    value: _restartOnDeath,
-                    onChanged: (value) {
-                      setState(() {
-                        _restartOnDeath = value;
-                      });
-                      _updateApp();
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                  ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancel'),
                 ),
-                SizedBox(
-                  width: 200,
-                  child: SwitchListTile(
-                    title: const Text('No Startup ID',
-                        style: TextStyle(fontSize: 12)),
-                    value: _noStartupId,
-                    onChanged: (value) {
-                      setState(() {
-                        _noStartupId = value;
-                      });
-                      _updateApp();
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                  ),
-                ),
-                SizedBox(
-                  width: 200,
-                  child: SwitchListTile(
-                    title: const Text('Halt Compositor',
-                        style: TextStyle(fontSize: 12)),
-                    value: _haltCompositor,
-                    onChanged: (value) {
-                      setState(() {
-                        _haltCompositor = value;
-                      });
-                      _updateApp();
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                  ),
-                ),
-                SizedBox(
-                  width: 200,
-                  child: SwitchListTile(
-                    title: const Text('Systemd Scope',
-                        style: TextStyle(fontSize: 12)),
-                    value: _systemdScope,
-                    onChanged: (value) {
-                      setState(() {
-                        _systemdScope = value;
-                      });
-                      _updateApp();
-                    },
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                  ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    _updateApp();
+                  },
+                  child: const Text('Save'),
                 ),
               ],
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: IconButton(
-                icon: const Icon(Icons.delete, size: 20),
-                onPressed: widget.onRemove,
-                tooltip: 'Remove App',
-                color: Colors.red,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              ),
-            ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 }
