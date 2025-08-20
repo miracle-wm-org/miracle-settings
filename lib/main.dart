@@ -8,8 +8,6 @@ import 'general/general_settings.dart';
 import 'animation/animation_editor.dart';
 import 'workspace/workspace_editor.dart';
 import 'ffi/miracle_config.dart';
-import 'dart:io';
-import 'package:path/path.dart' as p;
 
 const draculaBackground = Color(0xFF282A36);
 const draculaCurrentLine = Color(0xFF44475A);
@@ -155,6 +153,7 @@ class SettingsHomePage extends StatefulWidget {
 
 class _SettingsHomePageState extends State<SettingsHomePage> {
   int _selectedIndex = 0;
+  bool _hasUnsavedChanges = false;
 
   static const List<NavigationRailDestination> destinations = [
     NavigationRailDestination(icon: Icon(Icons.tune), label: Text('General')),
@@ -190,6 +189,24 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    widget.config.addListener(_setUnsavedChanges);
+  }
+
+  @override
+  void dispose() {
+    widget.config.removeListener(_setUnsavedChanges);
+    super.dispose();
+  }
+
+  void _setUnsavedChanges() {
+    setState(() {
+      _hasUnsavedChanges = true;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Row(
@@ -213,31 +230,46 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.onPrimary,
-          onPressed: () {
-            final result = widget.config.saveToPath(widget.config.path);
-            if (result.success) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  content: Text('Saved the configuration'),
-                  duration: Duration(seconds: 3), // Show for 3 seconds
-                ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                  content: Text('Failed to save the configuration'),
-                  duration: Duration(seconds: 3), // Show for 3 seconds
-                ),
-              );
-            }
-          },
-          tooltip: 'Save',
-          child: const Icon(Icons.save),
-        ));
+        floatingActionButton: IgnorePointer(
+            ignoring: !_hasUnsavedChanges,
+            child: FloatingActionButton(
+              backgroundColor: _hasUnsavedChanges
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+              foregroundColor: _hasUnsavedChanges
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : Theme.of(context).colorScheme.onPrimary.withOpacity(0.38),
+              disabledElevation: 0,
+              onPressed: () {
+                if (!_hasUnsavedChanges) {
+                  return;
+                }
+
+                final result = widget.config.saveToPath(widget.config.path);
+                if (result.success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      content: Text('Saved the configuration'),
+                      duration: Duration(seconds: 3), // Show for 3 seconds
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      content: Text('Failed to save the configuration'),
+                      duration: Duration(seconds: 3), // Show for 3 seconds
+                    ),
+                  );
+                }
+
+                setState(() {
+                  _hasUnsavedChanges = false;
+                });
+              },
+              tooltip: 'Save',
+              child: const Icon(Icons.save),
+            )));
   }
 }

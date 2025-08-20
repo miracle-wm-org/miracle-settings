@@ -371,8 +371,7 @@ class _EnvVarDialogState extends State<_EnvVarDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            if (_keyController.text.isNotEmpty &&
-                _valueController.text.isNotEmpty) {
+            if (_keyController.text.isNotEmpty) {
               Navigator.pop(
                 context,
                 MapEntry(_keyController.text, _valueController.text),

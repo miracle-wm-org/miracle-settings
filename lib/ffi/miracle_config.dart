@@ -683,7 +683,7 @@ class MiracleConfig {
 }
 
 // Extended ConfigData wrapper with all methods
-class MiracleConfigData {
+class MiracleConfigData extends ChangeNotifier {
   final String path;
   final Pointer<_MiracleConfigData> _ptr;
 
@@ -739,31 +739,53 @@ class MiracleConfigData {
 
   // Accessors
   int get primaryModifier => _miracleConfigGetPrimaryModifier(_ptr);
-  set primaryModifier(int modifier) =>
-      _miracleConfigSetPrimaryModifier(_ptr, modifier);
+  set primaryModifier(int modifier) {
+    _miracleConfigSetPrimaryModifier(_ptr, modifier);
+    notifyListeners();
+  }
 
   int get primaryButton => _miracleConfigGetPrimaryButton(_ptr);
-  set primaryButton(int button) => _miracleConfigSetPrimaryButton(_ptr, button);
+  set primaryButton(int button) {
+    _miracleConfigSetPrimaryButton(_ptr, button);
+    notifyListeners();
+  }
 
   // Gaps
   int get innerGapsX => _miracleConfigGetInnerGapsX(_ptr);
-  set innerGapsX(int value) => _miracleConfigSetInnerGapsX(_ptr, value);
+  set innerGapsX(int value) {
+    _miracleConfigSetInnerGapsX(_ptr, value);
+    notifyListeners();
+  }
 
   int get innerGapsY => _miracleConfigGetInnerGapsY(_ptr);
-  set innerGapsY(int value) => _miracleConfigSetInnerGapsY(_ptr, value);
+  set innerGapsY(int value) {
+    _miracleConfigSetInnerGapsY(_ptr, value);
+    notifyListeners();
+  }
 
   int get outerGapsX => _miracleConfigGetOuterGapsX(_ptr);
-  set outerGapsX(int value) => _miracleConfigSetOuterGapsX(_ptr, value);
+  set outerGapsX(int value) {
+    _miracleConfigSetOuterGapsX(_ptr, value);
+    notifyListeners();
+  }
 
   int get outerGapsY => _miracleConfigGetOuterGapsY(_ptr);
-  set outerGapsY(int value) => _miracleConfigSetOuterGapsY(_ptr, value);
+  set outerGapsY(int value) {
+    _miracleConfigSetOuterGapsY(_ptr, value);
+    notifyListeners();
+  }
 
   int get resizeJump => _miracleConfigGetResizeJump(_ptr);
-  set resizeJump(int value) => _miracleConfigSetResizeJump(_ptr, value);
+  set resizeJump(int value) {
+    _miracleConfigSetResizeJump(_ptr, value);
+    notifyListeners();
+  }
 
   bool get animationsEnabled => _miracleConfigGetAnimationsEnabled(_ptr);
-  set animationsEnabled(bool value) =>
-      _miracleConfigSetAnimationsEnabled(_ptr, value);
+  set animationsEnabled(bool value) {
+    _miracleConfigSetAnimationsEnabled(_ptr, value);
+    notifyListeners();
+  }
 
   // Terminal
   String? get terminal {
@@ -779,6 +801,7 @@ class MiracleConfigData {
       _miracleConfigSetTerminal(_ptr, ptr);
       malloc.free(ptr);
     }
+    notifyListeners();
   }
 
   // Custom key commands
@@ -805,6 +828,8 @@ class MiracleConfigData {
     final cmdPtr = command.toNativeUtf8();
     _miracleConfigAddCustomKeyCommand(_ptr, action, modifiers, key, cmdPtr);
     malloc.free(cmdPtr);
+
+    notifyListeners();
   }
 
   void editCustomKeyCommand(
@@ -813,14 +838,18 @@ class MiracleConfigData {
     _miracleConfigEditCustomKeyCommand(
         _ptr, index, action, modifiers, key, cmdPtr);
     malloc.free(cmdPtr);
+
+    notifyListeners();
   }
 
   void clearCustomKeyCommands() {
     _miracleConfigClearCustomKeyCommands(_ptr);
+    notifyListeners();
   }
 
   void removeCustomKeyCommand(int index) {
     _miracleConfigRemoveCustomKeyCommand(_ptr, index);
+    notifyListeners();
   }
 
   // Startup apps
@@ -861,6 +890,7 @@ class MiracleConfigData {
       inSystemdScope,
     );
     malloc.free(cmdPtr);
+    notifyListeners();
   }
 
   void updateStartupApp(
@@ -882,10 +912,14 @@ class MiracleConfigData {
       inSystemdScope,
     );
     malloc.free(cmdPtr);
+    notifyListeners();
   }
 
-  bool removeStartupApp(int index) =>
-      _miracleConfigRemoveStartupApp(_ptr, index);
+  bool removeStartupApp(int index) {
+    final bool result = _miracleConfigRemoveStartupApp(_ptr, index);
+    notifyListeners();
+    return result;
+  }
 
   // Environment variables
   List<MiracleEnvVar> getEnvironmentVariables() {
@@ -911,6 +945,7 @@ class MiracleConfigData {
     _miracleConfigAddEnvVar(_ptr, keyPtr, valuePtr);
     malloc.free(keyPtr);
     malloc.free(valuePtr);
+    notifyListeners();
   }
 
   void setEnvironmentVariable(int index, String key, String value) {
@@ -919,10 +954,14 @@ class MiracleConfigData {
     _miracleConfigSetEnvVar(_ptr, index, keyPtr, valuePtr);
     malloc.free(keyPtr);
     malloc.free(valuePtr);
+    notifyListeners();
   }
 
-  bool removeEnvironmentVariable(int index) =>
-      _miracleConfigRemoveEnvVar(_ptr, index);
+  bool removeEnvironmentVariable(int index) {
+    final bool result = _miracleConfigRemoveEnvVar(_ptr, index);
+    notifyListeners();
+    return result;
+  }
 
   // Built-in key commands
   List<MiracleBuiltInKeyCommand> getBuiltInKeyCommands() {
@@ -947,16 +986,21 @@ class MiracleConfigData {
   void addBuiltInKeyCommand(int action, int modifiers, int key, int command) {
     _miracleConfigAddBuiltInKeyCommandOverride(
         _ptr, action, modifiers, key, command);
+    notifyListeners();
   }
 
   void updateBuiltInKeyCommand(
       int index, int action, int modifiers, int key, int command) {
     _miracleConfigSetBuiltInKeyCommandOverride(
         _ptr, index, action, modifiers, key, command);
+    notifyListeners();
   }
 
   bool removeBuiltInKeyCommand(int index) {
-    return _miracleConfigRemoveBuiltInKeyCommandOverride(_ptr, index);
+    final bool result =
+        _miracleConfigRemoveBuiltInKeyCommandOverride(_ptr, index);
+    notifyListeners();
+    return result;
   }
 
   int _doubleColorToInt(double color) {
@@ -999,6 +1043,7 @@ class MiracleConfigData {
         _ptr, config.size, config.radius, focusColor, color);
     calloc.free(focusColor);
     calloc.free(color);
+    notifyListeners();
   }
 
   // Animation
@@ -1041,10 +1086,13 @@ class MiracleConfigData {
 
     _miracleConfigSetAnimationDef(_ptr, event.index, defPtr);
     calloc.free(defPtr);
+
+    notifyListeners();
   }
 
   void resetAnimationDefinition(MiracleAnimatableEvent event) {
     _miracleConfigResetAnimationDef(_ptr, event.index);
+    notifyListeners();
   }
 
   // Workspace config
@@ -1070,6 +1118,7 @@ class MiracleConfigData {
     final namePtr = name?.toNativeUtf8() ?? nullptr;
     _miracleConfigAddWorkspaceConfig(_ptr, num, containerType, namePtr);
     if (name != null) malloc.free(namePtr);
+    notifyListeners();
   }
 
   void setWorkspaceConfig(int index, int num, int containerType,
@@ -1077,15 +1126,21 @@ class MiracleConfigData {
     final namePtr = name?.toNativeUtf8() ?? nullptr;
     _miracleConfigSetWorkspaceConfig(_ptr, index, num, containerType, namePtr);
     if (name != null) malloc.free(namePtr);
+    notifyListeners();
   }
 
-  bool removeWorkspaceConfig(int index) =>
-      _miracleConfigRemoveWorkspaceConfig(_ptr, index);
+  bool removeWorkspaceConfig(int index) {
+    final bool result = _miracleConfigRemoveWorkspaceConfig(_ptr, index);
+    notifyListeners();
+    return result;
+  }
 
   // Move modifier
   int get moveModifier => _miracleConfigGetMoveModifier(_ptr);
-  set moveModifier(int modifier) =>
-      _miracleConfigSetMoveModifier(_ptr, modifier);
+  set moveModifier(int modifier) {
+    _miracleConfigSetMoveModifier(_ptr, modifier);
+    notifyListeners();
+  }
 
   // Drag and drop
   MiracleDragAndDropConfig get dragAndDrop {
@@ -1098,6 +1153,7 @@ class MiracleConfigData {
 
   set dragAndDrop(MiracleDragAndDropConfig config) {
     _miracleConfigSetDragAndDrop(_ptr, config.enabled, config.modifiers);
+    notifyListeners();
   }
 }
 
