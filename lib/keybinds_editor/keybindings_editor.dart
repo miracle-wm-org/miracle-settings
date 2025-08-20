@@ -22,8 +22,8 @@ class _KeybindingsEditorState extends State<KeybindingsEditor> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                BuiltInKeybindingsEditor(config: widget.config),
                 CustomKeybindingsEditor(config: widget.config),
+                BuiltInKeybindingsEditor(config: widget.config),
               ],
             ),
           ),
