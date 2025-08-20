@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:miracle_settings/applications/startup_apps_editor.dart';
-import 'package:miracle_settings/border/border_editor.dart';
 import 'package:miracle_settings/config.dart';
 import 'keybinds_editor/keybindings_editor.dart';
 import 'general/general_settings.dart';
@@ -170,10 +169,6 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
       label: Text('Workspaces'),
     ),
     NavigationRailDestination(
-      icon: Icon(Icons.border_all),
-      label: Text('Borders'),
-    ),
-    NavigationRailDestination(
       icon: Icon(Icons.animation),
       label: Text('Animations'),
     ),
@@ -184,7 +179,6 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
     (SettingsHomePage home) => KeybindingsEditor(config: home.config),
     (SettingsHomePage home) => StartupAppsEditor(config: home.config),
     (SettingsHomePage home) => WorkspaceEditor(config: home.config),
-    (SettingsHomePage home) => BorderEditor(config: home.config),
     (SettingsHomePage home) => AnimationEditor(config: home.config),
   ];
 

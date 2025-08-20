@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'border_editor.dart';
 import 'drag_and_drop_editor.dart';
 import 'package:miracle_settings/ffi/miracle_config.dart';
 import 'package:miracle_settings/general/primary_modifier_editor.dart';
@@ -22,6 +23,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
     return SingleChildScrollView(
         child: Column(children: [
       _buildGeneralSection(config),
+      BorderEditor(config: config),
       DragAndDropEditor(config: config),
       _EnvironmentVariablesEditor(config: config),
     ]));
