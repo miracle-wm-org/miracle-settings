@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'animation_editor_dialog.dart';
 import 'package:miracle_settings/ffi/miracle_config.dart';
 import 'package:miracle_settings/shared/helpers.dart';
+import 'package:miracle_settings/widgets/section.dart';
 
 class AnimationEditor extends StatelessWidget {
   const AnimationEditor({required this.config, super.key});
@@ -16,35 +18,21 @@ class AnimationEditor extends StatelessWidget {
     });
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          children: [
-            const Icon(Icons.animation, size: 28),
-            const SizedBox(width: 12),
-            Text(
-              'Animations',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-        ),
-      ),
-      const Divider(height: 1),
       Expanded(
           child: SingleChildScrollView(
-              child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 80),
-                  child: Column(children: [
-                    ...definitions.asMap().entries.map((entry) {
-                      final event = MiracleAnimatableEvent.values[entry.key];
-                      final definition = definitions[entry.key];
+        child: Section(
+            title: 'Animations',
+            icon: Icons.animation_outlined,
+            child: Column(children: [
+              ...definitions.asMap().entries.map((entry) {
+                final event = MiracleAnimatableEvent.values[entry.key];
+                final definition = definitions[entry.key];
 
-                      return _AnimationDefinitionCard(
-                          event: event, definition: definition, config: config);
-                    })
-                  ]))))
+                return _AnimationDefinitionCard(
+                    event: event, definition: definition, config: config);
+              })
+            ])),
+      ))
     ]);
   }
 }
@@ -68,7 +56,7 @@ class _AnimationDefinitionCardState extends State<_AnimationDefinitionCard> {
   @override
   void initState() {
     super.initState();
-    definition = widget.definition;
+    definition = widget.definition.copyWith();
   }
 
   void _saveDefinition(MiracleAnimationDefinition newDef) {
@@ -81,288 +69,42 @@ class _AnimationDefinitionCardState extends State<_AnimationDefinitionCard> {
   void _resetDefinition() {
     widget.config.resetAnimationDefinition(widget.event);
     setState(() {
-      definition = widget.config.getAnimationDefinition(widget.event);
+      definition =
+          widget.config.getAnimationDefinition(widget.event).copyWith();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      child: ListTile(
-        title: Text(
-          camelToSentence(widget.event.toString().split('.').last),
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                'Type: ${camelToSentence(definition.type.toString().split('.').last)}'),
-            Text(
-                'Easing: ${camelToSentence(definition.function.toString().split('.').last)}'),
-            Text('Duration: ${definition.durationSeconds.toStringAsFixed(2)}s'),
-          ],
-        ),
-        trailing: IconButton(
-          icon: const Icon(Icons.edit),
-          onPressed: () => _showEditDialog(context),
-        ),
+    return ListTile(
+      title: Text(
+        camelToSentence(widget.event.toString().split('.').last),
+        style: Theme.of(context).textTheme.headlineLarge,
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              'Type: ${camelToSentence(definition.type.toString().split('.').last)}'),
+          Text(
+              'Easing: ${camelToSentence(definition.function.toString().split('.').last)}'),
+          Text('Duration: ${definition.durationSeconds.toStringAsFixed(2)}s'),
+        ],
+      ),
+      trailing: IconButton(
+        icon: const Icon(Icons.edit),
+        onPressed: () => _showEditDialog(context),
       ),
     );
   }
 
   void _showEditDialog(BuildContext context) {
-    var editedDefinition = definition.copyWith();
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            final height = MediaQuery.of(context).size.height;
-            final width = MediaQuery.of(context).size.width;
-
-            return AlertDialog(
-              title: Text(
-                  'Edit ${camelToSentence(widget.event.toString().split('.').last)}'),
-              content: SizedBox(
-                width: width,
-                height: height * 0.6,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 16),
-                      DropdownButtonFormField<MiracleAnimationType>(
-                        value: editedDefinition.type,
-                        items: MiracleAnimationType.values
-                            .where((t) => t != MiracleAnimationType.max)
-                            .map((type) {
-                          return DropdownMenuItem(
-                            value: type,
-                            child: Text(camelToSentence(
-                                type.toString().split('.').last)),
-                          );
-                        }).toList(),
-                        onChanged: (type) {
-                          if (type == null) return;
-                          setState(() {
-                            editedDefinition =
-                                editedDefinition.copyWith(type: type);
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'Animation Type',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      DropdownButtonFormField<MiracleEaseFunction>(
-                        value: editedDefinition.function,
-                        items: MiracleEaseFunction.values
-                            .where((f) => f != MiracleEaseFunction.max)
-                            .map((function) {
-                          return DropdownMenuItem(
-                            value: function,
-                            child: Text(camelToSentence(
-                                function.toString().split('.').last)),
-                          );
-                        }).toList(),
-                        onChanged: (function) {
-                          if (function == null) return;
-                          setState(() {
-                            editedDefinition =
-                                editedDefinition.copyWith(function: function);
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'Easing Function',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        initialValue:
-                            editedDefinition.durationSeconds.toString(),
-                        decoration: const InputDecoration(
-                          labelText: 'Duration (seconds)',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          final duration = double.tryParse(value);
-                          if (duration != null) {
-                            setState(() {
-                              editedDefinition = editedDefinition.copyWith(
-                                  durationSeconds: duration);
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        initialValue: editedDefinition.c1.toString(),
-                        decoration: const InputDecoration(
-                          labelText: 'c1 (Bezier control point)',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          final val = double.tryParse(value);
-                          if (val != null) {
-                            setState(() {
-                              editedDefinition =
-                                  editedDefinition.copyWith(c1: val);
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        initialValue: editedDefinition.c2.toString(),
-                        decoration: const InputDecoration(
-                          labelText: 'c2 (Bezier control point)',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          final val = double.tryParse(value);
-                          if (val != null) {
-                            setState(() {
-                              editedDefinition =
-                                  editedDefinition.copyWith(c2: val);
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        initialValue: editedDefinition.c3.toString(),
-                        decoration: const InputDecoration(
-                          labelText: 'c3 (Bezier control point)',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          final val = double.tryParse(value);
-                          if (val != null) {
-                            setState(() {
-                              editedDefinition =
-                                  editedDefinition.copyWith(c3: val);
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        initialValue: editedDefinition.c4.toString(),
-                        decoration: const InputDecoration(
-                          labelText: 'c4 (Bezier control point)',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          final val = double.tryParse(value);
-                          if (val != null) {
-                            setState(() {
-                              editedDefinition =
-                                  editedDefinition.copyWith(c4: val);
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        initialValue: editedDefinition.c5.toString(),
-                        decoration: const InputDecoration(
-                          labelText: 'c5 (Bezier control point)',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          final val = double.tryParse(value);
-                          if (val != null) {
-                            setState(() {
-                              editedDefinition =
-                                  editedDefinition.copyWith(c5: val);
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        initialValue: editedDefinition.n1.toString(),
-                        decoration: const InputDecoration(
-                          labelText: 'n1 (Elastic oscillations)',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          final val = double.tryParse(value);
-                          if (val != null) {
-                            setState(() {
-                              editedDefinition =
-                                  editedDefinition.copyWith(n1: val);
-                            });
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        initialValue: editedDefinition.d1.toString(),
-                        decoration: const InputDecoration(
-                          labelText: 'd1 (Elastic period)',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          final val = double.tryParse(value);
-                          if (val != null) {
-                            setState(() {
-                              editedDefinition =
-                                  editedDefinition.copyWith(d1: val);
-                            });
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        _resetDefinition();
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Reset'),
-                    ),
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Cancel'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _saveDefinition(editedDefinition);
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Save'),
-                        ),
-                      ],
-                    )
-                  ],
-                )
-              ],
-            );
-          },
-        );
-      },
+    showAnimationEditorDialog(
+      context,
+      definition,
+      (newDef) => _saveDefinition(newDef),
+      (newDef) => _resetDefinition(),
     );
   }
 }
