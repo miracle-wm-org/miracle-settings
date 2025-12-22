@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miracle_settings/widgets/dialog_wrapper.dart';
 import 'package:miracle_settings/widgets/section.dart';
-import '../ffi/miracle_config.dart';
+import '../ffi/miracle_config_wrapper.dart';
 import '../shared/shell_command_input.dart';
 
 class StartupAppsEditor extends StatefulWidget {

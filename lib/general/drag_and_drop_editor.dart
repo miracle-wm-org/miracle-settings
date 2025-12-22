@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/ffi/miracle_config_wrapper.dart';
 import 'package:miracle_settings/widgets/section.dart';
 import 'package:miracle_settings/widgets/modifiers_selector.dart';
 

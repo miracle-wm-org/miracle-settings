@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:logging/logging.dart';
-import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/ffi/miracle_config_wrapper.dart';
 import 'package:toml/toml.dart';
 import 'package:path/path.dart' as p;
 

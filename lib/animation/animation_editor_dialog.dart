@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/ffi/miracle_config_wrapper.dart';
 import 'package:miracle_settings/shared/helpers.dart';
 import 'package:miracle_settings/widgets/dialog_wrapper.dart';
 
@@ -53,9 +53,7 @@ class _AnimationEditorState extends State<_AnimationEditor> {
             const SizedBox(height: 16),
             DropdownButtonFormField<MiracleAnimationType>(
               value: definition.type,
-              items: MiracleAnimationType.values
-                  .where((t) => t != MiracleAnimationType.max)
-                  .map((type) {
+              items: MiracleAnimationType.values.map((type) {
                 return DropdownMenuItem(
                   value: type,
                   child: Text(camelToSentence(type.toString().split('.').last)),
@@ -75,13 +73,10 @@ class _AnimationEditorState extends State<_AnimationEditor> {
             const SizedBox(height: 16),
             DropdownButtonFormField<MiracleEaseFunction>(
               value: definition.function,
-              items: MiracleEaseFunction.values
-                  .where((f) => f != MiracleEaseFunction.max)
-                  .map((function) {
+              items: MiracleEaseFunction.values.map((func) {
                 return DropdownMenuItem(
-                  value: function,
-                  child: Text(
-                      camelToSentence(function.toString().split('.').last)),
+                  value: func,
+                  child: Text(camelToSentence(func.toString().split('.').last)),
                 );
               }).toList(),
               onChanged: (function) {

@@ -6,7 +6,7 @@ import 'keybinds_editor/keybindings_editor.dart';
 import 'general/general_settings.dart';
 import 'animation/animation_editor.dart';
 import 'workspace/workspace_editor.dart';
-import 'ffi/miracle_config.dart';
+import 'ffi/miracle_config_wrapper.dart';
 
 const draculaBackground = Color(0xFF282A36);
 const draculaCurrentLine = Color(0xFF44475A);

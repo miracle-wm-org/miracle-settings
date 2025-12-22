@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:miracle_settings/widgets/section.dart';
-import '../ffi/miracle_config.dart';
+import '../ffi/miracle_config_wrapper.dart';
 
 class BorderEditor extends StatefulWidget {
   const BorderEditor({required this.config, super.key});

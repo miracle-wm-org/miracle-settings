@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'animation_editor_dialog.dart';
-import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/ffi/miracle_config_wrapper.dart';
 import 'package:miracle_settings/shared/helpers.dart';
 import 'package:miracle_settings/widgets/section.dart';
 

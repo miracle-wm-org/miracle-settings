@@ -11,6 +11,20 @@ A graphical frontend for configuring [miracle-wm](https://github.com/miracle-wm-
 Requires:
 - `flutter >= 3.24.0`
 
+### Setup
+
+First, initialize the git submodule to fetch the miracle-wm headers:
+```sh
+git submodule update --init --recursive
+```
+
+If you're cloning this repository for the first time, you can clone with submodules in one step:
+```sh
+git clone --recurse-submodules https://github.com/miracle-wm-org/miracle-settings
+```
+
+### Build
+
 Then run:
 ```sh
 flutter pub get

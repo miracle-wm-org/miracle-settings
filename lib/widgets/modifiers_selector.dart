@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/ffi/miracle_config_wrapper.dart';
 
 class ModifiersSelector extends StatelessWidget {
   const ModifiersSelector({

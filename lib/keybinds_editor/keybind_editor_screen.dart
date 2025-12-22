@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:miracle_settings/ffi/miracle_config.dart';
+import 'package:miracle_settings/ffi/miracle_config_wrapper.dart';
 import 'package:miracle_settings/shared/shell_command_input.dart';
 import 'package:miracle_settings/widgets/dialog_wrapper.dart';
 import 'key_combination_selector.dart';
@@ -89,7 +89,7 @@ class _KeybindEditorScreenState extends State<KeybindEditorScreen> {
           if (widget.isSelectingBuiltIn)
             DropdownButtonFormField<int>(
               value: _selectedBuiltInAction,
-              items: MiracleConfig.getBuiltInKeyCommandsOptions().map((option) {
+              items: MiracleConfig.getBuiltInKeyCommandOptions().map((option) {
                 return DropdownMenuItem<int>(
                   value: option.value,
                   child: Text(option.name),

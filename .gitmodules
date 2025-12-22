@@ -1,0 +1,3 @@
+[submodule "vendor/miracle-wm"]
+	path = vendor/miracle-wm
+	url = https://github.com/miracle-wm-org/miracle-wm
