@@ -117,10 +117,10 @@ class _StartupAppsEditorState extends State<StartupAppsEditor> {
                 onPressed: () => _removeApp(i),
                 icon: const Icon(Icons.delete_outline, size: 20)),
             IconButton(
-                onPressed: () => i != 0 ? swap(i, i - 1) : (),
+                onPressed: i != 0 ? () => swap(i, i - 1) : null,
                 icon: const Icon(Icons.arrow_upward_outlined, size: 20)),
             IconButton(
-                onPressed: () => i != apps.length - 1 ? swap(i, i + 1) : (),
+                onPressed: i != apps.length - 1 ? () => swap(i, i + 1) : null,
                 icon: const Icon(Icons.arrow_downward_outlined, size: 20))
           ]),
         )
